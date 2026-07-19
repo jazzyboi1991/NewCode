@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+src/newcodespeak/__init__.py
+src/newcodespeak/__main__.py
+src/newcodespeak/cli.py
+src/newcodespeak.egg-info/PKG-INFO
+src/newcodespeak.egg-info/SOURCES.txt
+src/newcodespeak.egg-info/dependency_links.txt
+src/newcodespeak.egg-info/entry_points.txt
+src/newcodespeak.egg-info/top_level.txt
+tests/test_cli.py

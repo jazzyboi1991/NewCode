@@ -1,0 +1,2 @@
+[console_scripts]
+ncs = newcodespeak.cli:main
