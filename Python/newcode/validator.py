@@ -1,5 +1,5 @@
-from .errors import fail
-from .model import (
+from newcode.errors import fail
+from newcode.model import (
     Assign,
     Binary,
     Call,

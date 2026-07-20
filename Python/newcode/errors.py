@@ -28,6 +28,6 @@ class NewcodeError(Exception):
             )
             return result
 
-    @staticmethod
-    def fail(code: str, message: str, span: Span) -> NewcodeError:
-        return NewcodeError(code, message, span)
+def fail(code: str, message: str, span: Span) -> NewcodeError:
+    return NewcodeError(code, message, span)
+

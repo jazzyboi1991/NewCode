@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from fractions import Fraction
 
-from .errors import Span
+from newcode.errors import Span
 
 
 @dataclass(frozen=True)

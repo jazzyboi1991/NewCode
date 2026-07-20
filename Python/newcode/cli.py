@@ -3,13 +3,13 @@ import sys
 import time
 from pathlib import Path
 
-from . import LANGUAGE_VERSION, VERSION
-from .censor import Censor
-from .errors import NewcodeError
-from .lexer import Lexer
-from .parser import Parser
-from .runtime import Runtime
-from .validator import Validator
+from newcode import LANGUAGE_VERSION, VERSION
+from newcode.censor import Censor
+from newcode.errors import NewcodeError
+from newcode.lexer import Lexer
+from newcode.parser import Parser
+from newcode.runtime import Runtime
+from newcode.validator import Validator
 
 
 def main(argv=None):

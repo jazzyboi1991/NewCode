@@ -1,6 +1,6 @@
-from .errors import fail
-from .lexer import KEYWORDS, TYPE_NAMES
-from .model import (
+from newcode.errors import fail
+from newcode.lexer import KEYWORDS, TYPE_NAMES
+from newcode.model import (
     Assign,
     Binary,
     Call,

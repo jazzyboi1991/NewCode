@@ -1,9 +1,9 @@
 import re
 from dataclasses import dataclass
 
-from . import MAX_STEPS
-from .errors import fail
-from .model import (
+from newcode import MAX_STEPS
+from newcode.errors import fail
+from newcode.model import (
     Assign,
     Call,
     CallStatement,

@@ -2,7 +2,7 @@ import json
 import re
 from pathlib import Path
 
-from .errors import Span, fail
+from newcode.errors import Span, fail
 
 
 class Censor:

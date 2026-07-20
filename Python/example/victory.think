@@ -1,0 +1,16 @@
+newcode 0.1
+
+routine numberthink addgood(numberthink first, numberthink second)
+    reportvalue first plus second
+endroutine
+
+thought numberthink count be 3
+thought numberthink share be 1 divide 3
+thought goodthink approved be count more 0
+
+verify approved
+    speak "Victory count: ", addgood(count, 1)
+    speak "Share: ", share to 2
+otherthink
+    speak "Ungood."
+endverify

@@ -1,8 +1,7 @@
-from ast import List
+from newcode.censor import Censor
+from newcode.errors import Span, fail
+from newcode.model import Token
 
-from .censor import Censor
-from .errors import Span, fail
-from .model import Token
 
 KEYWORDS = frozenset(
     """
@@ -24,7 +23,8 @@ class Lexer:
             1,
         )
 
-    def scan(self) -> List[Token]:
+    def scan(self) -> list[Token]:
+
         tokens = []
 
         while self.index < len(self.source):
