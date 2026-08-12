@@ -126,6 +126,110 @@ class CallStatement(Stmt):
 
 
 @dataclass
+class Get(Expr):
+    target: Expr
+    mode: str
+    key: Expr
+
+
+@dataclass
+class Size(Expr):
+    target: Expr
+
+
+@dataclass
+class Slice(Expr):
+    target: Expr
+    start: Expr
+    stop: Expr
+
+
+@dataclass
+class LiteralValue(Expr):
+    value: object
+
+
+@dataclass
+class Composite(Expr):
+    type_name: str
+    items: list
+
+
+@dataclass
+class Change(Stmt):
+    target: Expr
+    mode: str
+    key: Expr
+    value: Expr
+
+
+@dataclass
+class Add(Stmt):
+    value: Expr
+    target: Expr
+
+
+@dataclass
+class Remove(Stmt):
+    target: Expr
+    mode: str
+    key: Expr
+
+
+@dataclass
+class Foreach(Stmt):
+    names: list[str]
+    target: Expr
+    body: list
+
+
+@dataclass
+class Try(Stmt):
+    body: list
+    handlers: list
+
+
+@dataclass
+class OtherCrime:
+    code: str | None
+    body: list
+
+
+@dataclass
+class FileRead(Expr):
+    path: Expr
+
+
+@dataclass
+class FileWrite(Stmt):
+    action: str
+    path: Expr
+    value: Expr
+
+
+@dataclass
+class Lines(Expr):
+    target: Expr
+
+
+@dataclass
+class JoinLines(Expr):
+    target: Expr
+
+
+@dataclass
+class ModuleUse(Stmt):
+    name: str
+    path: str
+
+
+@dataclass
+class TestThink(Stmt):
+    name: str
+    body: list
+
+
+@dataclass
 class Program:
     statements: list[Stmt]
 

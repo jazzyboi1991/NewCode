@@ -10,9 +10,9 @@ Newcode는 조지 오웰의 *1984*에 등장하는 신어(Newspeak)에서 영감
 
 ## 현재 상태
 
-언어 사양 버전은 **0.1**, Python 패키지 구현 버전은 **0.1.0**입니다. 저장소에는 Rust나 브라우저 구현이 없으며, 실행 코드는 `Python/` 아래에 있습니다.
+언어 사양 버전은 **0.2**, Python 구현 버전은 **0.2.0**입니다. 실행 코드는 `Python/` 아래에 있으며, 복합 자료형·파일·모듈·개발 도구를 포함합니다.
 
-현재 구현은 개발 중인 프로토타입입니다. `goodthink version`, `check`, `run`은 기본 예제 프로그램 기준으로 검증되어 있습니다. 따라서 `docs/` 문서는 설계·참조 자료로 사용하고, 모든 계획 기능이 실행된다고 가정해서는 안 됩니다.
+현재 구현은 Python 참조 구현 0.2.0입니다. 0.1 예제의 하위 호환성을 유지하면서 복합 자료형, 파일, 모듈, 포맷·추적·토큰 검사 도구를 제공합니다.
 
 ## 요구 사항
 
@@ -60,17 +60,21 @@ endverify
 
 Newcode는 일반적인 프로그래밍 용어 대신 신어풍 키워드를 사용합니다.
 
-| 목적 | Newcode 형식 |
-| --- | --- |
-| 변수 선언·대입 | `thought ... be ...` |
-| 불리언 값 | `good`, `ungood` |
-| 조건문 | `verify`, `otherthink`, `endverify` |
-| 반복문 | `repeatwhile`, `nextrepeat`, `stoprepeat`, `endrepeat` |
-| 함수형 routine | `routine`, `reportvalue`, `endroutine` |
-| 출력 | `speak`, `speaknumber` |
-| 입력 | `listennumber`, `listenwords` |
+| 목적           | Newcode 형식                                           |
+| -------------- | ------------------------------------------------------ |
+| 변수 선언·대입 | `thought ... be ...`                                   |
+| 불리언 값      | `good`, `ungood`                                       |
+| 조건문         | `verify`, `otherthink`, `endverify`                    |
+| 반복문         | `repeatwhile`, `nextrepeat`, `stoprepeat`, `endrepeat` |
+| 함수형 routine | `routine`, `reportvalue`, `endroutine`                 |
+| 출력           | `speak`, `speaknumber`                                 |
+| 입력           | `listennumber`, `listenwords`                          |
+| 복합 자료형    | `listthink`, `recordthink`, `indexthink`               |
+| 파일·모듈      | `readfile`, `writefile`, `appendfile`, `use`, `call`   |
 
 ## 언어 모델
+
+Newcode 0.2는 0.1의 단순 변수와 routine을 유지하면서 `nothink`, `maybe`, 복합 자료형, `foreach`, 파일·모듈 기능을 추가하는 버전입니다.
 
 Newcode 0.1에는 네 가지 명시적 자료형이 있습니다.
 
@@ -105,7 +109,8 @@ NewCode/
 │   ├── goodthink.py              # CLI 진입점
 │   ├── prohibited_words.json     # 공식 검열 lexicon
 │   ├── test_parser.py            # parser 인접 결함 회귀 테스트
-│   ├── example/victory.think     # Newcode 예제 프로그램
+│   ├── test_newcode02.py         # 0.2 자료형·파일·모듈·예외 테스트
+│   ├── example/                  # 0.1 회귀 및 0.2 기능 예제
 │   └── newcode/
 │       ├── cli.py                # 인자 처리와 명령 실행 조정
 │       ├── lexer.py              # 토큰, 리터럴, 주석, 어휘 검사
@@ -116,10 +121,6 @@ NewCode/
 │       ├── censor.py             # lexicon 로드와 매칭
 │       ├── errors.py             # 소스 위치와 진단
 │       └── __init__.py            # 버전과 실행 제한
-├── docs/
-│   ├── 계획서 1.md               # 언어 설계와 구현 계획
-│   ├── 계획서 2.md               # 추가 계획 메모
-│   └── Python Codes.md           # 확장 Python 참조 자료
 ├── README.md
 └── README_KR.md
 ```
@@ -136,7 +137,7 @@ source.think
 
 ## 의도적인 제한
 
-0.1 설계는 배열, map, 객체, 파일, 모듈, 네트워크 접근, 복소수, 암시적 자료형 변환, 공식 lexicon을 사용자 프로그램이 변경하는 기능을 제공하지 않습니다. 이 제한은 실험의 일부입니다. 제한된 어휘가 프로그램의 형태를 어떻게 바꾸는지 관찰할 수 있도록 언어의 표현 범위를 의도적으로 좁혔습니다.
+0.2에서는 목록·기록·맵, 파일, 모듈을 지원하지만 네트워크 접근, 복소수, 암시적 자료형 변환, 공식 lexicon 변경은 여전히 제공하지 않습니다. 이 제한은 실험의 일부입니다. 제한된 어휘가 프로그램의 형태를 어떻게 바꾸는지 관찰할 수 있도록 언어의 표현 범위를 의도적으로 좁혔습니다.
 
 ## 개발 참고 사항
 

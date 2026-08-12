@@ -1,16 +1,29 @@
+// 조건식과 otherthink 분기 예제입니다.
 newcode 0.1
 
+// 비교에 사용할 기준 숫자를 저장합니다.
 thought numberthink count be 4
+// count가 2보다 큰지 검사한 결과를 저장합니다.
 thought goodthink enough be count more 2
+// count가 정확히 4인지 검사한 결과를 저장합니다.
 thought goodthink exact be count same 4
+// 두 조건이 모두 참인지 both로 결합합니다.
 thought goodthink approved be enough both exact
 
+// approved가 참이면 첫 번째 분기를 실행합니다.
 verify approved
+    // 조건이 참일 때 승인 메시지를 출력합니다.
     speak "Condition accepted."
+// approved가 거짓일 때 실행할 대체 분기입니다.
 otherthink
+    // 조건이 거짓일 때의 메시지를 출력합니다.
     speak "Ungood."
+// 조건 분기를 닫습니다.
 endverify
 
+// 괄호 안의 비교 결과를 un으로 뒤집어 검사합니다.
 verify un (count less 0)
+    // count가 0보다 작지 않다는 뜻의 메시지를 출력합니다.
     speak "Unary un works with grouped comparison."
+// 두 번째 조건 분기를 닫습니다.
 endverify

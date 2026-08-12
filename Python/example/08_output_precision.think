@@ -1,8 +1,14 @@
+// 소수 출력 자릿수 지정 예제입니다.
 newcode 0.1
 
+// 1을 3으로 나눈 값을 share에 저장합니다.
 thought numberthink share be 1 divide 3
+// 5를 2로 나눈 값을 half에 저장합니다.
 thought numberthink half be 5 divide 2
 
+// share를 기본 소수 형식으로 출력합니다.
 speak "default share: ", share
+// share를 소수 둘째 자리까지 반올림해 출력합니다.
 speak "two digits: ", share to 2
+// half를 소수 첫째 자리까지 반올림해 숫자 전용 명령으로 출력합니다.
 speaknumber half to 1

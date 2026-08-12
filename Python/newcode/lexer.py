@@ -7,10 +7,13 @@ KEYWORDS = frozenset(
     """
 newcode thought be speak speaknumber listennumber listenwords verify otherthink endverify
 repeatwhile endrepeat nextrepeat stoprepeat routine endroutine reportvalue numberthink
-wordthink goodthink silencethink plus minus times divide more less same both either un join to good ungood
+wordthink goodthink silencethink rawthink listthink recordthink indexthink nothink maybe
+plus minus times divide more less same both either un join to good ungood get at field key
+change add remove size slice from foreach in endforeach trythink othercrime endtrythink
+readfile writefile appendfile lines joinlines use call testthink endtestthink
 """.split()
 )
-TYPE_NAMES = frozenset({"numberthink", "wordthink", "goodthink", "silencethink"})
+TYPE_NAMES = frozenset({"numberthink", "wordthink", "goodthink", "silencethink", "rawthink", "listthink", "recordthink", "indexthink"})
 
 
 class Lexer:

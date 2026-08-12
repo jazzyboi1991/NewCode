@@ -1,23 +1,39 @@
 from newcode.errors import fail
 from newcode.model import (
+    Add,
     Assign,
     Binary,
     Call,
     CallStatement,
     Declare,
+    Change,
+    Composite,
+    FileRead,
+    FileWrite,
+    Foreach,
+    Get,
     Good,
     Input,
+    JoinLines,
+    Lines,
+    LiteralValue,
+    ModuleUse,
     Name,
     Next,
     Number,
     Repeat,
     Report,
     Routine,
+    Remove,
     Speak,
+    Slice,
     Stop,
     Unary,
     Verify,
     Word,
+    Size,
+    Try,
+    TestThink,
 )
 
 
@@ -182,6 +198,22 @@ class Validator:
         self._scopes()[-1][name] = type_name
 
     def _type(self, expr):
+        if isinstance(expr, LiteralValue):
+            return "nothink"
+        if isinstance(expr, Composite):
+            return expr.type_name
+        if isinstance(expr, FileRead):
+            return "rawthink"
+        if isinstance(expr, Size):
+            return "numberthink"
+        if isinstance(expr, Lines):
+            return "listthink"
+        if isinstance(expr, JoinLines):
+            return "wordthink"
+        if isinstance(expr, Slice):
+            return "wordthink"
+        if isinstance(expr, Get):
+            return "nothink"
         if isinstance(expr, Number):
             return "numberthink"
 
@@ -245,6 +277,9 @@ class Validator:
 
             return "goodthink"
 
+        if expr.op == "join" and left in ("wordthink", "rawthink") and right in ("wordthink", "rawthink"):
+            return "wordthink"
+
         expected = (
             "wordthink"
             if expr.op == "join"
@@ -282,10 +317,12 @@ class Validator:
         return guaranteed
 
     def _statement(self, statement):
+        if isinstance(statement, (ModuleUse, TestThink)): return False
         if isinstance(statement, Declare):
             got = self._type(statement.value)
 
-            if got != statement.type_name:
+            declared = statement.type_name.removeprefix("maybe ")
+            if got != declared and not (statement.type_name.startswith("maybe ") and got == "nothink"):
                 raise fail(
                     "THINKTYPE ERROR",
                     f"expected {statement.type_name}, received {got}",
@@ -300,12 +337,42 @@ class Validator:
                 self._type(statement.value),
             )
 
-            if expected != got:
+            if expected != got and not (expected.startswith("maybe ") and got in ("nothink", expected[6:])):
                 raise fail(
                     "THINKTYPE ERROR",
                     f"expected {expected}, received {got}",
                     statement.span,
                 )
+
+        elif isinstance(statement, (Change, Add, Remove, FileWrite)):
+            if isinstance(statement, Change):
+                self._type(statement.target)
+                if not (statement.mode == "field" and isinstance(statement.key, Name)):
+                    self._type(statement.key)
+                self._type(statement.value)
+            elif isinstance(statement, Add):
+                self._type(statement.value)
+                if self._type(statement.target) != "listthink":
+                    raise fail("THINKTYPE ERROR", "add requires listthink", statement.target.span)
+            elif isinstance(statement, Remove):
+                target_type = self._type(statement.target)
+                if target_type not in ("listthink", "recordthink", "indexthink"):
+                    raise fail("THINKTYPE ERROR", "remove requires a compound value", statement.target.span)
+                if not (statement.mode == "field" and isinstance(statement.key, Name)):
+                    self._type(statement.key)
+            else:
+                self._type(statement.path); self._type(statement.value)
+
+        elif isinstance(statement, Foreach):
+            self._type(statement.target); self.loop_depth += 1
+            self._scopes().append({name: "numberthink" for name in statement.names})
+            try: self._block(statement.body)
+            finally: self.loop_depth -= 1
+            self._scopes().pop()
+
+        elif isinstance(statement, Try):
+            self._nested(statement.body)
+            for handler in statement.handlers: self._nested(handler.body)
 
         elif isinstance(statement, Speak):
             for value, digits in statement.items:

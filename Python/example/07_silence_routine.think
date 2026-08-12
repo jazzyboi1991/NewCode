@@ -1,8 +1,14 @@
+// 반환값 없이 출력만 수행하는 silencethink routine 예제입니다.
 newcode 0.1
 
+// message 문자열을 받아 화면에 출력하고 값을 반환하지 않는 routine입니다.
 routine silencethink announce(wordthink message)
+    // 전달받은 message를 출력합니다.
     speak message
+// announce routine의 정의를 끝냅니다.
 endroutine
 
+// routine을 이름으로 호출해 안내 문구를 출력합니다.
 announce("Silence routine prints and returns no value.")
+// routine 호출 뒤에도 다음 문장이 실행됨을 보여 줍니다.
 speak "After call."

@@ -3,7 +3,7 @@
 한국어 문서: [README_KR.md](README_KR.md)
 
 Newcode is an experimental programming language inspired by Newspeak from
-George Orwell's *Nineteen Eighty-Four*. It treats vocabulary control as a
+George Orwell's _Nineteen Eighty-Four_. It treats vocabulary control as a
 language-design constraint: source code is written with a deliberately small
 approved vocabulary, and the interpreter rejects prohibited words, phrases,
 and unapproved alternatives.
@@ -17,14 +17,12 @@ extension.
 
 ## Current status
 
-The language specification is version **0.1** and the Python package reports
-implementation version **0.1.0**. The repository has no Rust or browser
-implementation; the executable code is under `Python/`.
+The language specification is version **0.2** and the Python package reports
+implementation version **0.2.0**. Rust and browser ports remain future work;
+the executable reference implementation is under `Python/`.
 
-The implementation is an active prototype. `goodthink version`, `check`, and
-`run` are verified against the bundled example program. Treat the documents in
-`docs/` as design/reference material, not as a guarantee that every planned
-feature is currently executable.
+`goodthink version`, `run`, `check`, `format`, `inspect`, `policy`, and `test`
+are available. The bundled 0.1 examples remain regression fixtures.
 
 ## Requirements
 
@@ -41,12 +39,17 @@ PYTHONPATH=Python python3 Python/goodthink.py check Python/example/victory.think
 PYTHONPATH=Python python3 Python/goodthink.py run Python/example/victory.think
 ```
 
-The CLI accepts three commands:
+The CLI accepts these commands:
 
 ```text
 goodthink version
 goodthink check <program.think>
 goodthink run <program.think>
+goodthink format [--write] <program.think>
+goodthink check [--trace] <program.think>
+goodthink inspect --tokens|--ast <program.think>
+goodthink policy check "text"
+goodthink test <program.think>
 ```
 
 `check` lexes, parses, and statically validates a program without executing
@@ -76,25 +79,28 @@ endverify
 The language uses Newspeak-flavoured keywords instead of conventional
 programming terminology:
 
-| Purpose | Newcode forms |
-| --- | --- |
-| Variable declaration/assignment | `thought ... be ...` |
-| Boolean values | `good`, `ungood` |
-| Conditional | `verify`, `otherthink`, `endverify` |
-| Loop | `repeatwhile`, `nextrepeat`, `stoprepeat`, `endrepeat` |
-| Function-like routine | `routine`, `reportvalue`, `endroutine` |
-| Output | `speak`, `speaknumber` |
-| Input | `listennumber`, `listenwords` |
+| Purpose                         | Newcode forms                                          |
+| ------------------------------- | ------------------------------------------------------ |
+| Variable declaration/assignment | `thought ... be ...`                                   |
+| Boolean values                  | `good`, `ungood`                                       |
+| Conditional                     | `verify`, `otherthink`, `endverify`                    |
+| Loop                            | `repeatwhile`, `nextrepeat`, `stoprepeat`, `endrepeat` |
+| Function-like routine           | `routine`, `reportvalue`, `endroutine`                 |
+| Output                          | `speak`, `speaknumber`                                 |
+| Input                           | `listennumber`, `listenwords`                          |
 
 ## Language model
 
-Newcode 0.1 has four explicit types:
+Newcode 0.2 retains the four basic types and adds:
 
 - `numberthink` — exact integer and decimal values represented internally with
   `fractions.Fraction`.
 - `wordthink` — ASCII strings checked by the official lexicon.
 - `goodthink` — the boolean values `good` and `ungood`.
 - `silencethink` — a routine that returns no value.
+- `nothink` — the absence of a value, usable with `maybe <type>`.
+- `listthink`, `recordthink`, and `indexthink` — mixed nested list/record/map values.
+- `rawthink` — file/input text checked when it reaches an output or text operation.
 
 Numeric operators are `plus`, `minus`, `times`, and `divide`. Comparisons are
 `more`, `less`, and `same`; boolean operators are `both`, `either`, and the
@@ -108,8 +114,10 @@ comments, ASCII identifiers, decimal literals, and the escapes `\\n`, `\\t`,
 
 The validator performs type checking, name/scope checks, duplicate declaration
 checks, return-path checks, and direct or indirect recursion rejection. The
-runtime maintains global and routine-local scopes and stops execution after
-`1_000_000` counted steps.
+runtime maintains global and routine-local scopes, supports `foreach`,
+`trythink`, safe relative text-file I/O, and stops execution after `1_000_000`
+counted steps. Modules expose routines through `call module routine(...)`;
+`testthink` blocks run in isolated test mode.
 
 ## Censorship policy
 
@@ -128,7 +136,8 @@ The interpreter also rechecks text created by `join`, so concatenation cannot
 be used to bypass the policy.
 
 Typical diagnostics include `WORDCRIME`, `CRIMESTOP`, `THINKTYPE ERROR`,
-`THINKLOGIC ERROR`, `MATHCRIME`, `INPUTCRIME`, `LOOPTHINK`, and `WORKLIMIT`.
+`THINKLOGIC ERROR`, `MATHCRIME`, `INPUTCRIME`, `LOOPTHINK`, `WORKLIMIT`,
+`INDEXCRIME`, `FILECRIME`, `MODULECRIME`, and `TESTCRIME`.
 
 ## Repository layout
 
@@ -138,7 +147,8 @@ NewCode/
 │   ├── goodthink.py              # CLI entry point
 │   ├── prohibited_words.json     # Official censorship lexicon
 │   ├── test_parser.py            # Regression tests for parser-adjacent bugs
-│   ├── example/victory.think     # Example Newcode program
+│   ├── test_newcode02.py         # 0.2 type/file/module/exception tests
+│   ├── example/                  # 0.1 fixtures and 0.2 feature examples
 │   └── newcode/
 │       ├── cli.py                # Argument parsing and command orchestration
 │       ├── lexer.py              # Tokens, literals, comments, lexeme checks
@@ -149,10 +159,6 @@ NewCode/
 │       ├── censor.py             # Lexicon loading and matching
 │       ├── errors.py             # Source spans and diagnostics
 │       └── __init__.py            # Version and execution limit
-├── docs/
-│   ├── 계획서 1.md               # Language design and implementation plan
-│   ├── 계획서 2.md               # Additional planning notes
-│   └── Python Codes.md           # Expanded Python reference notes
 ├── README.md
 └── README_KR.md
 ```
@@ -169,9 +175,9 @@ source.think
 
 ## Deliberate limitations
 
-The 0.1 design does not provide arrays, maps, objects, files, modules,
-network access, complex numbers, implicit type conversion, or user-controlled
-changes to the official lexicon. These limitations are part of the experiment:
+Newcode 0.2 still excludes network access, complex numbers, implicit type
+conversion, and user-controlled changes to the official lexicon. These
+limitations are part of the experiment:
 they make it possible to observe how a restricted vocabulary changes the shape
 of programs.
 

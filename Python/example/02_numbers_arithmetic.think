@@ -1,15 +1,28 @@
+// 산술 연산 예제이므로 0.1 문법을 사용합니다.
 newcode 0.1
 
+// 첫 번째 피연산자로 사용할 숫자를 선언합니다.
 thought numberthink first be 12
+// 두 번째 피연산자로 사용할 숫자를 선언합니다.
 thought numberthink second be 5
+// 두 수의 합을 sum에 저장합니다.
 thought numberthink sum be first plus second
+// 첫 번째 수에서 두 번째 수를 뺀 차를 gap에 저장합니다.
 thought numberthink gap be first minus second
+// 두 수의 곱을 product에 저장합니다.
 thought numberthink product be first times second
+// 첫 번째 수를 두 번째 수로 나눈 몫을 ratio에 저장합니다.
 thought numberthink ratio be first divide second
+// 괄호 안의 덧셈을 먼저 계산한 뒤 2를 곱합니다.
 thought numberthink grouped be (first plus second) times 2
 
+// sum 계산 결과를 문자열과 함께 출력합니다.
 speak "sum: ", sum
+// gap 계산 결과를 출력합니다.
 speak "gap: ", gap
+// product 계산 결과를 출력합니다.
 speak "product: ", product
+// ratio를 기본 형식에서 소수 둘째 자리까지 반올림해 출력합니다.
 speak "ratio: ", ratio to 2
+// 괄호를 사용한 grouped 계산 결과를 출력합니다.
 speak "grouped: ", grouped
