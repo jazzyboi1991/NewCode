@@ -55,7 +55,11 @@ class Parser:
 
     def require(self, value):
         if not self.word(value):
-            raise fail("THINKLOGIC ERROR", f"expected '{value}'".self.current().span)
+            raise fail(
+                "THINKLOGIC ERROR",
+                f"expected '{value}'",
+                self.current().span,
+            )
         return self.take()
 
     def identifier(self):
@@ -83,6 +87,7 @@ class Parser:
 
         self.take()
         self.end_line()
+        self.lines()
         statements = []
         while self.current().kind != "eof":
             statements.append(self.statement())
@@ -90,7 +95,7 @@ class Parser:
         return Program(statements)
 
     def statement(self):
-        token, span = self.current(), self.current.span
+        token, span = self.current(), self.current().span
 
         if self.word("thought"):
             self.take()
@@ -242,10 +247,14 @@ class Parser:
                 break
 
             self.take()
-            self.end_line()
-            body = self.block({"endroutine"})
-            self.require("endroutine")
-            self.end_line()
+
+        if self.current().kind != ")":
+            raise fail("THINKLOGIC ERROR", "expected ')'", self.current().span)
+        self.take()
+        self.end_line()
+        body = self.block({"endroutine"})
+        self.require("endroutine")
+        self.end_line()
 
         return Routine(span, return_type.value, name.value, params, body)
 
@@ -258,7 +267,7 @@ class Parser:
                 raise fail(
                     "THINKLOGIC ERROR",
                     "routines are only allowed at top level",
-                    self.current.span,
+                    self.current().span,
                 )
 
             result.append(self.statement())

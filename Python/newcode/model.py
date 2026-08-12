@@ -133,6 +133,7 @@ class Program:
 def fraction(text: str) -> Fraction:
     whole, dot, tail = text.partition(".")
 
-    return Fraction(
-        int(whole + tail), 10 ** len(tail) if dot else Fraction(int(whole), 1)
-    )
+    if not dot:
+        return Fraction(int(whole), 1)
+
+    return Fraction(int(whole + tail), 10 ** len(tail))

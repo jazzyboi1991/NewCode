@@ -33,7 +33,7 @@ class Lexer:
                 self._advance()
                 continue
             if ch == "\n":
-                tokens.append(Token("newline", "", "span"))
+                tokens.append(Token("newline", "", span))
                 self._advance()
                 continue
             if self.source.startswith("//", self.index):

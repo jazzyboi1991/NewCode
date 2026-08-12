@@ -1,0 +1,105 @@
+{
+  "projectRoot": "/Users/manuelpark/Documents/대학교 프로그래밍/Just For Fun/NewCode",
+  "batchFiles": [
+    {
+      "path": "Python/example/victory.think",
+      "language": "think",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Python/goodthink.py",
+      "language": "python",
+      "sizeLines": 4,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Python/newcode/__init__.py",
+      "language": "python",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Python/newcode/censor.py",
+      "language": "python",
+      "sizeLines": 102,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Python/newcode/cli.py",
+      "language": "python",
+      "sizeLines": 82,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Python/newcode/errors.py",
+      "language": "python",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Python/newcode/lexer.py",
+      "language": "python",
+      "sizeLines": 159,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Python/newcode/model.py",
+      "language": "python",
+      "sizeLines": 138,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Python/newcode/parser.py",
+      "language": "python",
+      "sizeLines": 337,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Python/newcode/runtime.py",
+      "language": "python",
+      "sizeLines": 301,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Python/newcode/validator.py",
+      "language": "python",
+      "sizeLines": 384,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Python/prohibited_words.json",
+      "language": "json",
+      "sizeLines": 740,
+      "fileCategory": "config"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "sizeLines": 187,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "README_KR.md",
+      "language": "markdown",
+      "sizeLines": 0,
+      "fileCategory": "docs"
+    }
+  ],
+  "batchImportData": {
+    "Python/example/victory.think": [],
+    "Python/goodthink.py": [],
+    "Python/newcode/__init__.py": [],
+    "Python/newcode/censor.py": [],
+    "Python/newcode/cli.py": [],
+    "Python/newcode/errors.py": [],
+    "Python/newcode/lexer.py": [],
+    "Python/newcode/model.py": [],
+    "Python/newcode/parser.py": [],
+    "Python/newcode/runtime.py": [],
+    "Python/newcode/validator.py": [],
+    "Python/prohibited_words.json": [],
+    "README.md": [],
+    "README_KR.md": []
+  }
+}

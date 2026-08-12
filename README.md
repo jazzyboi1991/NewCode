@@ -1,56 +1,191 @@
 # Newcode
 
-Newcode is an executable programming-language experiment inspired by the controlled vocabulary and bureaucratic tone of *Nineteen Eighty-Four*. Its official runner is `goodthink`; Newcode source files use the `.think` extension.
+한국어 문서: [README_KR.md](README_KR.md)
 
-This final 0.1 release contains a Rust command-line runner and a browser edition written in TypeScript. The censorship policy is deliberately data-driven: edit [`prohibited_words.json`](prohibited_words.json) to adjust the official sensitive-language and oldspeak-replacement rules.
+Newcode is an experimental programming language inspired by Newspeak from
+George Orwell's *Nineteen Eighty-Four*. It treats vocabulary control as a
+language-design constraint: source code is written with a deliberately small
+approved vocabulary, and the interpreter rejects prohibited words, phrases,
+and unapproved alternatives.
 
-## Run the command-line runner
+The project currently contains a Python reference implementation. The command
+line program is named `goodthink`, and Newcode source files use the `.think`
+extension.
 
-Rust 1.85 or newer is required.
+> This is a critical language experiment about censorship and thought control,
+> not an endorsement of those ideas.
+
+## Current status
+
+The language specification is version **0.1** and the Python package reports
+implementation version **0.1.0**. The repository has no Rust or browser
+implementation; the executable code is under `Python/`.
+
+The implementation is an active prototype. `goodthink version`, `check`, and
+`run` are verified against the bundled example program. Treat the documents in
+`docs/` as design/reference material, not as a guarantee that every planned
+feature is currently executable.
+
+## Requirements
+
+- Python 3.11 or newer is recommended.
+- No third-party Python packages are required.
+
+## Run the CLI
+
+Run commands from the repository root:
 
 ```sh
-cargo build --release
-./target/release/goodthink version
-./target/release/goodthink check examples/victory.think
-./target/release/goodthink run examples/victory.think
+PYTHONPATH=Python python3 Python/goodthink.py version
+PYTHONPATH=Python python3 Python/goodthink.py check Python/example/victory.think
+PYTHONPATH=Python python3 Python/goodthink.py run Python/example/victory.think
 ```
 
-`check` validates syntax, the censorship policy, routine declarations, and recursion before running anything. `run` then executes the program, reporting validation and execution times. Errors use `file: line, column: ERROR: message` followed by a source caret.
+The CLI accepts three commands:
 
-## Use the browser edition
-
-```sh
-cd web
-npm install
-npm run build
-cd ..
-python3 -m http.server 8000
+```text
+goodthink version
+goodthink check <program.think>
+goodthink run <program.think>
 ```
 
-Open [http://127.0.0.1:8000/web/](http://127.0.0.1:8000/web/). Serving from the repository root lets the page load the shared `prohibited_words.json` file.
+`check` lexes, parses, and statically validates a program without executing
+it. `run` performs the same validation and then interprets the program.
+Programs must have the `.think` suffix. Errors include a diagnostic code and,
+when a source span is available, the corresponding line, column, and caret.
 
-## A small program
+## A Newcode program
 
 ```newcode
 newcode 0.1
-
-thought numberthink count be 3
-thought numberthink share be 1 divide 3
 
 routine numberthink addgood(numberthink first, numberthink second)
     reportvalue first plus second
 endroutine
 
-verify count more 0
-    speak "Approved count: ", addgood(count, 1)
-    speak "Share: ", share to 2
+thought numberthink count be 3
+thought goodthink approved be count more 0
+
+verify approved
+    speak "Victory count: ", addgood(count, 1)
 otherthink
     speak "Ungood."
 endverify
 ```
 
-The language supports exact decimal arithmetic in the Rust runner, `verify` / `otherthink`, `repeatwhile`, typed routines, `listennumber`, `listenwords`, C-style comments, and `join`. See [`docs/계획서.md`](docs/%EA%B3%84%ED%9A%8D%EC%84%9C.md) for the complete 0.1 language definition and [`examples/`](examples/) for runnable examples.
+The language uses Newspeak-flavoured keywords instead of conventional
+programming terminology:
 
-## Current boundary
+| Purpose | Newcode forms |
+| --- | --- |
+| Variable declaration/assignment | `thought ... be ...` |
+| Boolean values | `good`, `ungood` |
+| Conditional | `verify`, `otherthink`, `endverify` |
+| Loop | `repeatwhile`, `nextrepeat`, `stoprepeat`, `endrepeat` |
+| Function-like routine | `routine`, `reportvalue`, `endroutine` |
+| Output | `speak`, `speaknumber` |
+| Input | `listennumber`, `listenwords` |
 
-Newcode 0.1 intentionally has no arrays, maps, files, modules, network access, or complex numbers. Complex-number support is reserved for a future version.
+## Language model
+
+Newcode 0.1 has four explicit types:
+
+- `numberthink` — exact integer and decimal values represented internally with
+  `fractions.Fraction`.
+- `wordthink` — ASCII strings checked by the official lexicon.
+- `goodthink` — the boolean values `good` and `ungood`.
+- `silencethink` — a routine that returns no value.
+
+Numeric operators are `plus`, `minus`, `times`, and `divide`. Comparisons are
+`more`, `less`, and `same`; boolean operators are `both`, `either`, and the
+unary `un`. The `join` operator concatenates strings and immediately checks the
+result against the censorship policy.
+
+Statements are separated by newlines. The lexer supports `//` and `/* ... */`
+comments, ASCII identifiers, decimal literals, and the escapes `\\n`, `\\t`,
+`\\"`, and `\\\\` in strings. Blocks are explicitly closed with words such as
+`endverify`, `endrepeat`, and `endroutine`.
+
+The validator performs type checking, name/scope checks, duplicate declaration
+checks, return-path checks, and direct or indirect recursion rejection. The
+runtime maintains global and routine-local scopes and stops execution after
+`1_000_000` counted steps.
+
+## Censorship policy
+
+The official policy is stored in
+[`Python/prohibited_words.json`](Python/prohibited_words.json). Source programs
+cannot modify it. The policy contains:
+
+- `replacement_rules` — oldspeak terms that must be replaced by approved
+  Newcode vocabulary;
+- `prohibited_terms` — words with no accepted replacement;
+- `prohibited_phrases` — phrases that are rejected as a whole.
+
+Identifiers, string literals, and `listenwords` input are checked. Matching is
+case-insensitive and normalizes common separator and leetspeak variations.
+The interpreter also rechecks text created by `join`, so concatenation cannot
+be used to bypass the policy.
+
+Typical diagnostics include `WORDCRIME`, `CRIMESTOP`, `THINKTYPE ERROR`,
+`THINKLOGIC ERROR`, `MATHCRIME`, `INPUTCRIME`, `LOOPTHINK`, and `WORKLIMIT`.
+
+## Repository layout
+
+```text
+NewCode/
+├── Python/
+│   ├── goodthink.py              # CLI entry point
+│   ├── prohibited_words.json     # Official censorship lexicon
+│   ├── test_parser.py            # Regression tests for parser-adjacent bugs
+│   ├── example/victory.think     # Example Newcode program
+│   └── newcode/
+│       ├── cli.py                # Argument parsing and command orchestration
+│       ├── lexer.py              # Tokens, literals, comments, lexeme checks
+│       ├── parser.py             # AST construction
+│       ├── model.py              # AST/token data classes and decimal parsing
+│       ├── validator.py          # Static checks and type analysis
+│       ├── runtime.py            # Interpreter and formatted output
+│       ├── censor.py             # Lexicon loading and matching
+│       ├── errors.py             # Source spans and diagnostics
+│       └── __init__.py            # Version and execution limit
+├── docs/
+│   ├── 계획서 1.md               # Language design and implementation plan
+│   ├── 계획서 2.md               # Additional planning notes
+│   └── Python Codes.md           # Expanded Python reference notes
+├── README.md
+└── README_KR.md
+```
+
+The implementation pipeline is:
+
+```text
+source.think
+   → Censor + Lexer
+   → Parser / AST
+   → Validator
+   → Runtime
+```
+
+## Deliberate limitations
+
+The 0.1 design does not provide arrays, maps, objects, files, modules,
+network access, complex numbers, implicit type conversion, or user-controlled
+changes to the official lexicon. These limitations are part of the experiment:
+they make it possible to observe how a restricted vocabulary changes the shape
+of programs.
+
+## Development notes
+
+The repository has a small `unittest` regression suite and no packaging
+metadata. Before extending the language, keep the following boundaries in mind:
+
+1. Add or change syntax in `lexer.py` and `parser.py`.
+2. Represent new syntax in `model.py`.
+3. Enforce static rules in `validator.py`.
+4. Implement execution semantics in `runtime.py`.
+5. Update the lexicon and the design documents when vocabulary rules change.
+
+The next practical maintenance step is to expand regression coverage for
+tokenization, parsing, censorship, type errors, control flow, routines, and
+runtime edge cases.
