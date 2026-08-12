@@ -1,0 +1,7 @@
+newcode 0.1
+
+thought numberthink amount be listennumber
+thought wordthink label be listenwords
+
+speak "input number: ", amount
+speak "input words: ", label

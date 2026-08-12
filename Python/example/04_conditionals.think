@@ -1,0 +1,16 @@
+newcode 0.1
+
+thought numberthink count be 4
+thought goodthink enough be count more 2
+thought goodthink exact be count same 4
+thought goodthink approved be enough both exact
+
+verify approved
+    speak "Condition accepted."
+otherthink
+    speak "Ungood."
+endverify
+
+verify un (count less 0)
+    speak "Unary un works with grouped comparison."
+endverify

@@ -1,0 +1,7 @@
+newcode 0.1
+
+// A Newcode program always starts with the version header.
+/* Block comments can span
+   more than one line. */
+
+speak "Header and comments approved."

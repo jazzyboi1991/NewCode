@@ -1,1 +1,20 @@
 docs/
+
+# Python bytecode and local caches
+__pycache__/
+*.py[cod]
+*$py.class
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
+# Local virtual environments
+.venv/
+venv/
+env/
+
+# Local analysis/tool output
+.ua/
+
+# macOS Finder metadata
+.DS_Store

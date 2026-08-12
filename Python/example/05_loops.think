@@ -1,0 +1,22 @@
+newcode 0.1
+
+thought numberthink count be 0
+thought numberthink total be 0
+
+repeatwhile count less 6
+    thought goodthink skip be count same 2
+    thought count be count plus 1
+
+    verify skip
+        nextrepeat
+    endverify
+
+    thought total be total plus count
+
+    verify count same 5
+        stoprepeat
+    endverify
+endrepeat
+
+speak "count: ", count
+speak "total: ", total

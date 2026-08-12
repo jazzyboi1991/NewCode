@@ -1,0 +1,8 @@
+newcode 0.1
+
+routine silencethink announce(wordthink message)
+    speak message
+endroutine
+
+announce("Silence routine prints and returns no value.")
+speak "After call."

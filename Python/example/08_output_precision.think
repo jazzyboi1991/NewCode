@@ -1,0 +1,8 @@
+newcode 0.1
+
+thought numberthink share be 1 divide 3
+thought numberthink half be 5 divide 2
+
+speak "default share: ", share
+speak "two digits: ", share to 2
+speaknumber half to 1

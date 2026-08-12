@@ -1,0 +1,15 @@
+newcode 0.1
+
+routine numberthink addgood(numberthink first, numberthink second)
+    reportvalue first plus second
+endroutine
+
+routine wordthink makeword(wordthink left, wordthink right)
+    reportvalue left join right
+endroutine
+
+thought numberthink total be addgood(7, 8)
+thought wordthink label be makeword("routine ", "approved")
+
+speak label
+speak "total: ", total

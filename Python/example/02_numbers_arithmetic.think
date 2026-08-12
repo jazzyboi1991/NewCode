@@ -1,0 +1,15 @@
+newcode 0.1
+
+thought numberthink first be 12
+thought numberthink second be 5
+thought numberthink sum be first plus second
+thought numberthink gap be first minus second
+thought numberthink product be first times second
+thought numberthink ratio be first divide second
+thought numberthink grouped be (first plus second) times 2
+
+speak "sum: ", sum
+speak "gap: ", gap
+speak "product: ", product
+speak "ratio: ", ratio to 2
+speak "grouped: ", grouped

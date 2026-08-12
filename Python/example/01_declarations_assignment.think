@@ -1,0 +1,11 @@
+newcode 0.1
+
+thought numberthink count be 1
+thought wordthink label be "Count"
+thought goodthink approved be good
+
+thought count be count plus 4
+
+verify approved
+    speak label, ": ", count
+endverify

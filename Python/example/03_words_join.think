@@ -1,0 +1,8 @@
+newcode 0.1
+
+thought wordthink first be "New"
+thought wordthink second be "code"
+thought wordthink label be first join second join " grammar"
+
+speak label
+speak "joined text is checked again"
