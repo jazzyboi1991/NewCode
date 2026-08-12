@@ -26,8 +26,7 @@ class NewcodeError(Exception):
                 + " " * (self.span.column - 1)
                 + "^"
             )
-            return result
+        return result
 
 def fail(code: str, message: str, span: Span) -> NewcodeError:
     return NewcodeError(code, message, span)
-

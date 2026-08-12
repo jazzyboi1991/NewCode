@@ -56,8 +56,12 @@ class Runtime:
             value=self._value(expr.target); return value[int(self._value(expr.start)):int(self._value(expr.stop))]
         if isinstance(expr,Get):
             value=self._value(expr.target); key=expr.key.value if expr.mode=="field" and isinstance(expr.key,Name) else self._value(expr.key)
-            try: return value[int(key)] if expr.mode=="at" else value.get(key)
-            except (IndexError,KeyError,TypeError): return None
+            if expr.mode == "at":
+                try: return value[int(key)]
+                except (IndexError, KeyError, TypeError, ValueError):
+                    raise fail("INDEXCRIME", "item does not exist", expr.span)
+            try: return value.get(key)
+            except (AttributeError, TypeError): raise fail("INDEXCRIME", "field or key access is invalid", expr.span)
         if isinstance(expr,Unary): return not self._value(expr.value) if expr.op=="un" else -self._value(expr.value)
         if isinstance(expr,Call): return self._call(expr)
         left,right=self._value(expr.left),self._value(expr.right)
