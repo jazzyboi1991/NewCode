@@ -35,8 +35,8 @@ Run commands from the repository root:
 
 ```sh
 PYTHONPATH=Python python3 Python/goodthink.py version
-PYTHONPATH=Python python3 Python/goodthink.py check Python/example/victory.think
-PYTHONPATH=Python python3 Python/goodthink.py run Python/example/victory.think
+PYTHONPATH=Python python3 Python/goodthink.py check Python/example/v0.1/victory.think
+PYTHONPATH=Python python3 Python/goodthink.py run Python/example/v0.1/victory.think
 ```
 
 The CLI accepts these commands:
@@ -148,7 +148,9 @@ NewCode/
 │   ├── prohibited_words.json     # Official censorship lexicon
 │   ├── test_parser.py            # Regression tests for parser-adjacent bugs
 │   ├── test_newcode02.py         # 0.2 type/file/module/exception tests
-│   ├── example/                  # 0.1 fixtures and 0.2 feature examples
+│   ├── example/
+│   │   ├── v0.1/                 # 0.1 regression examples and grammar docs
+│   │   └── v0.2/                 # 0.2 module and test examples
 │   └── newcode/
 │       ├── cli.py                # Argument parsing and command orchestration
 │       ├── lexer.py              # Tokens, literals, comments, lexeme checks

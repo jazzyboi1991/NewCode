@@ -7,14 +7,14 @@ language into a single tour.
 Run examples from the `NewCode/` directory:
 
 ```sh
-PYTHONPATH=Python python3 Python/goodthink.py check Python/example/04_conditionals.think
-PYTHONPATH=Python python3 Python/goodthink.py run Python/example/04_conditionals.think
+PYTHONPATH=Python python3 Python/goodthink.py check Python/example/v0.1/04_conditionals.think
+PYTHONPATH=Python python3 Python/goodthink.py run Python/example/v0.1/04_conditionals.think
 ```
 
 For the input example:
 
 ```sh
-printf '7\nAlpha\n' | PYTHONPATH=Python python3 Python/goodthink.py run Python/example/09_input.think
+printf '7\nAlpha\n' | PYTHONPATH=Python python3 Python/goodthink.py run Python/example/v0.1/09_input.think
 ```
 
 ## Example Map

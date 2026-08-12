@@ -25,8 +25,8 @@ Newcode는 조지 오웰의 *1984*에 등장하는 신어(Newspeak)에서 영감
 
 ```sh
 PYTHONPATH=Python python3 Python/goodthink.py version
-PYTHONPATH=Python python3 Python/goodthink.py check Python/example/victory.think
-PYTHONPATH=Python python3 Python/goodthink.py run Python/example/victory.think
+PYTHONPATH=Python python3 Python/goodthink.py check Python/example/v0.1/victory.think
+PYTHONPATH=Python python3 Python/goodthink.py run Python/example/v0.1/victory.think
 ```
 
 CLI는 다음 세 명령을 제공합니다.
@@ -110,7 +110,9 @@ NewCode/
 │   ├── prohibited_words.json     # 공식 검열 lexicon
 │   ├── test_parser.py            # parser 인접 결함 회귀 테스트
 │   ├── test_newcode02.py         # 0.2 자료형·파일·모듈·예외 테스트
-│   ├── example/                  # 0.1 회귀 및 0.2 기능 예제
+│   ├── example/
+│   │   ├── v0.1/                 # 0.1 회귀 예제와 문법 문서
+│   │   └── v0.2/                 # 0.2 모듈·테스트 예제
 │   └── newcode/
 │       ├── cli.py                # 인자 처리와 명령 실행 조정
 │       ├── lexer.py              # 토큰, 리터럴, 주석, 어휘 검사
