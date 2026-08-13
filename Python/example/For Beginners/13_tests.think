@@ -1,0 +1,11 @@
+// testthink로 작은 검증을 작성합니다.
+newcode 0.2
+
+testthink "addition"
+    verify 2 plus 3 same 5
+        speak "test passed"
+    otherthink
+        speak "test failed"
+    endverify
+endtestthink
+

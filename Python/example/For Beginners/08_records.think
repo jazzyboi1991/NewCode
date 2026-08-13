@@ -1,0 +1,8 @@
+// recordthink로 이름이 있는 값을 묶습니다.
+newcode 0.2
+
+thought recordthink person be recordthink(name be "Ada", score be 10)
+change person field score be 12
+
+speak get person field name, ": ", get person field score
+

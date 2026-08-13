@@ -1,0 +1,7 @@
+// 다른 파일에서 불러올 routine을 정의하는 모듈입니다.
+newcode 0.2
+
+routine numberthink doublegood(numberthink value)
+    reportvalue value times 2
+endroutine
+

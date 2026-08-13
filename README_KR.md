@@ -21,7 +21,23 @@ Newcode는 조지 오웰의 *1984*에 등장하는 신어(Newspeak)에서 영감
 
 ## CLI 실행
 
-저장소 루트에서 다음 명령을 실행합니다.
+저장소 루트(`NewCode/`)에서는 다음처럼 실행합니다. 파일 경로는 현재 폴더
+기준의 상대 경로 또는 `/`로 시작하는 절대 경로 모두 사용할 수 있습니다.
+
+```sh
+python3 -m goodthink version
+python3 -m goodthink check "Python/example/For Beginners/01_calculator.think"
+python3 -m goodthink run "Python/example/For Beginners/01_calculator.think"
+```
+
+`Python/` 디렉터리로 이동한 경우에는 경로에서 `Python/`을 빼야 합니다.
+
+```sh
+cd Python
+python3 -m goodthink run "example/For Beginners/01_calculator.think"
+```
+
+저장소 루트에서는 기존 진입점도 사용할 수 있습니다.
 
 ```sh
 PYTHONPATH=Python python3 Python/goodthink.py version
@@ -29,15 +45,50 @@ PYTHONPATH=Python python3 Python/goodthink.py check Python/example/v0.1/victory.
 PYTHONPATH=Python python3 Python/goodthink.py run Python/example/v0.1/victory.think
 ```
 
-CLI는 다음 세 명령을 제공합니다.
+CLI는 다음 명령을 제공합니다.
 
 ```text
 goodthink version
 goodthink check <program.think>
 goodthink run <program.think>
+goodthink format [--write] <program.think>
+goodthink inspect --tokens <program.think>
+goodthink inspect --ast <program.think>
+goodthink policy check "text"
+goodthink test <program.think>
 ```
 
 `check`는 프로그램을 실행하지 않고 lexing, parsing, 정적 검사를 수행합니다. `run`은 같은 검사를 수행한 다음 프로그램을 인터프리트합니다. 프로그램 파일의 확장자는 반드시 `.think`여야 합니다. 오류에는 진단 코드가 포함되며, 소스 위치를 확인할 수 있는 경우 해당 줄·열과 caret 표시도 함께 출력됩니다.
+
+### CLI 명령 설명
+
+- `version`: goodthink와 Newcode 버전을 출력합니다.
+- `check`: 실행하지 않고 문법·자료형을 검사합니다. `--trace`를 붙이면 검사 단계를 표시합니다.
+- `run`: 검사 후 프로그램을 실행합니다.
+- `format`: 소스의 블록 들여쓰기를 출력합니다. `--write`를 붙이면 파일에 저장합니다.
+- `inspect --tokens`: lexer가 만든 토큰과 위치를 출력합니다.
+- `inspect --ast`: parser가 만든 AST를 출력합니다.
+- `policy check "text"`: 문자열이 검열 정책을 통과하는지 검사합니다.
+- `test`: `testthink` 블록만 격리된 환경에서 실행합니다.
+
+### 파일 헤더
+
+Newcode 0.2부터는 `newcode 0.2` 헤더를 생략할 수 있습니다. 헤더가 없으면 기본적으로 0.2 문법으로 해석됩니다. 0.1 호환 파일은 계속 `newcode 0.1`을 명시해야 합니다.
+
+```newcode
+thought numberthink count be 3
+speak count
+```
+
+### 전역 명령 설치(선택 사항)
+
+개발 환경에서 다음 명령으로 프로젝트를 설치하면 어느 폴더에서든 `goodthink`를 사용할 수 있습니다.
+
+```sh
+cd Python
+python3 -m pip install --user -e .
+goodthink run "example/For Beginners/01_calculator.think"
+```
 
 ## Newcode 프로그램 예시
 
@@ -111,6 +162,7 @@ NewCode/
 │   ├── test_parser.py            # parser 인접 결함 회귀 테스트
 │   ├── test_newcode02.py         # 0.2 자료형·파일·모듈·예외 테스트
 │   ├── example/
+│   │   ├── For Beginners/        # 기능별 초보자 예제
 │   │   ├── v0.1/                 # 0.1 회귀 예제와 문법 문서
 │   │   └── v0.2/                 # 0.2 모듈·테스트 예제
 │   └── newcode/

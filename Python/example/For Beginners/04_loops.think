@@ -1,0 +1,10 @@
+// repeatwhile로 같은 작업을 여러 번 실행합니다.
+newcode 0.2
+
+thought numberthink count be 1
+
+repeatwhile count less 4
+    speak "count: ", count
+    thought count be count plus 1
+endrepeat
+

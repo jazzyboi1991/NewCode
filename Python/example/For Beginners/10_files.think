@@ -1,0 +1,10 @@
+// 실행 폴더 아래의 텍스트 파일을 읽고 씁니다.
+newcode 0.2
+
+writefile "beginner_note.txt" be "first line"
+appendfile "beginner_note.txt" be "\nsecond line"
+thought rawthink note be readfile "beginner_note.txt"
+
+// 파일 내용은 lines로 목록으로 바꿀 수 있습니다.
+thought listthink parts be lines note
+speak size parts

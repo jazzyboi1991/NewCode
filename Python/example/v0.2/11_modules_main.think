@@ -1,7 +1,0 @@
-// 모듈 호출 문법을 사용하는 0.2 프로그램입니다.
-newcode 0.2
-
-// 같은 폴더의 모듈 파일을 mathgood이라는 이름공간으로 불러옵니다.
-use mathgood from "10_modules_math.think"
-// mathgood 이름공간의 addgood routine을 호출해 결과를 출력합니다.
-speak call mathgood addgood(2, 3)

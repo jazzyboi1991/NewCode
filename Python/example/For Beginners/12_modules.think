@@ -1,0 +1,6 @@
+// 같은 폴더의 모듈 routine을 이름공간으로 호출합니다.
+newcode 0.2
+
+use mathgood from "11_modules_math.think"
+speak call mathgood doublegood(7)
+

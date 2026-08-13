@@ -1,0 +1,9 @@
+// 값을 반환하는 routine을 정의하고 호출합니다.
+newcode 0.2
+
+routine numberthink addgood(numberthink first, numberthink second)
+    reportvalue first plus second
+endroutine
+
+speak "answer: ", addgood(4, 6)
+

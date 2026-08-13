@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: goodthink
+Version: 0.2.0
+Summary: Python reference interpreter for the Newcode language
+Requires-Python: >=3.11

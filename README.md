@@ -31,7 +31,23 @@ are available. The bundled 0.1 examples remain regression fixtures.
 
 ## Run the CLI
 
-Run commands from the repository root:
+From the repository root (`NewCode/`), run the module directly. Source paths
+may be relative to the current directory or absolute paths:
+
+```sh
+python3 -m goodthink version
+python3 -m goodthink check "Python/example/For Beginners/01_calculator.think"
+python3 -m goodthink run "Python/example/For Beginners/01_calculator.think"
+```
+
+If you change into `Python/`, remove the `Python/` prefix from the source path:
+
+```sh
+cd Python
+python3 -m goodthink run "example/For Beginners/01_calculator.think"
+```
+
+The original entry point also works from the repository root:
 
 ```sh
 PYTHONPATH=Python python3 Python/goodthink.py version
@@ -56,6 +72,38 @@ goodthink test <program.think>
 it. `run` performs the same validation and then interprets the program.
 Programs must have the `.think` suffix. Errors include a diagnostic code and,
 when a source span is available, the corresponding line, column, and caret.
+
+Command summary:
+
+- `version` prints the runner and language versions.
+- `check` validates without executing; add `--trace` to show validation stages.
+- `run` validates and executes a program.
+- `format` prints formatted indentation; add `--write` to save it.
+- `inspect --tokens` prints lexer tokens and source positions.
+- `inspect --ast` prints the parsed AST.
+- `policy check "text"` checks text against the censorship policy.
+- `test` runs only `testthink` blocks in isolation.
+
+### Optional header
+
+Newcode 0.2 files may omit the `newcode 0.2` header. A missing header defaults to
+Newcode 0.2. Keep `newcode 0.1` in legacy 0.1 programs when using the old syntax.
+
+```newcode
+thought numberthink count be 3
+speak count
+```
+
+### Optional global installation
+
+For a development installation, install the local package once and then use the
+short `goodthink` command from any directory:
+
+```sh
+cd Python
+python3 -m pip install --user -e .
+goodthink run "example/For Beginners/01_calculator.think"
+```
 
 ## A Newcode program
 
@@ -149,6 +197,7 @@ NewCode/
 │   ├── test_parser.py            # Regression tests for parser-adjacent bugs
 │   ├── test_newcode02.py         # 0.2 type/file/module/exception tests
 │   ├── example/
+│   │   ├── For Beginners/        # feature-by-feature beginner examples
 │   │   ├── v0.1/                 # 0.1 regression examples and grammar docs
 │   │   └── v0.2/                 # 0.2 module and test examples
 │   └── newcode/

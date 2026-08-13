@@ -1,0 +1,9 @@
+// 문자열 변수와 join을 연습합니다.
+newcode 0.2
+
+thought wordthink greeting be "Good"
+thought wordthink name be "thinker"
+thought wordthink message be greeting join ", " join name
+
+speak message
+

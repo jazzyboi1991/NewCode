@@ -1,0 +1,7 @@
+// 일반 출력과 소수 자릿수 출력을 연습합니다.
+newcode 0.2
+
+thought numberthink share be 1 divide 3
+speak "rounded: ", share to 2
+speaknumber share to 4
+

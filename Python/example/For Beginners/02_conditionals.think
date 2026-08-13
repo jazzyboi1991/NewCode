@@ -1,0 +1,15 @@
+// 초보자용 두 번째 예제: 조건문으로 점수를 판정합니다.
+newcode 0.2
+
+// 점수를 저장하고, 60점 이상인지 불리언 값으로 기록합니다.
+thought numberthink score be 75
+thought goodthink passed be score more 60
+
+// passed가 good이면 첫 번째 블록을 실행합니다.
+verify passed
+    speak "result: passed"
+otherthink
+    // passed가 ungood이면 otherthink 블록을 실행합니다.
+    speak "result: try again"
+endverify
+

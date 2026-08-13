@@ -1,0 +1,15 @@
+// 초보자용 첫 번째 예제: 숫자를 저장하고 계산합니다.
+newcode 0.2
+
+// 두 개의 숫자를 변수에 저장합니다.
+thought numberthink first be 8
+thought numberthink second be 3
+
+// plus로 덧셈을 수행하고 결과를 새 변수에 저장합니다.
+thought numberthink total be first plus second
+
+// 문자열과 숫자를 함께 출력할 수 있습니다.
+speak "first: ", first
+speak "second: ", second
+speak "total: ", total
+

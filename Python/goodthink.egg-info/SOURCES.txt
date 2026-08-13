@@ -1,0 +1,17 @@
+pyproject.toml
+goodthink/__init__.py
+goodthink/__main__.py
+goodthink.egg-info/PKG-INFO
+goodthink.egg-info/SOURCES.txt
+goodthink.egg-info/dependency_links.txt
+goodthink.egg-info/entry_points.txt
+goodthink.egg-info/top_level.txt
+newcode/__init__.py
+newcode/censor.py
+newcode/cli.py
+newcode/errors.py
+newcode/lexer.py
+newcode/model.py
+newcode/parser.py
+newcode/runtime.py
+newcode/validator.py

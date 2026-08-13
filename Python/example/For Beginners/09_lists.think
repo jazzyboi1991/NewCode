@@ -1,0 +1,18 @@
+// 초보자용 세 번째 예제: 목록을 만들고 순회하고 수정합니다.
+newcode 0.2
+
+// listthink는 여러 값을 순서대로 담는 목록 자료형입니다.
+thought listthink tasks be listthink("read", "practice")
+
+// add로 목록의 마지막에 새 항목을 추가합니다.
+add "review" to tasks
+
+// foreach는 목록의 위치와 값을 차례로 꺼냅니다.
+foreach position, task in tasks
+    speak position, ": ", task
+endforeach
+
+// 목록의 첫 번째 항목을 삭제합니다.
+remove tasks at 0
+speak "remaining: ", size tasks
+

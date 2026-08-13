@@ -24,9 +24,18 @@ class Parser:
         if token.kind != "word" or token.value in KEYWORDS: raise fail("THINKLOGIC ERROR", "expected an identifier", token.span)
         return self.take()
     def parse(self):
-        self.lines(); header = self.require("newcode"); version = self.current()
-        if version.kind != "number" or version.value not in ("0.1", "0.2"): raise fail("THINKLOGIC ERROR", "unsupported language version", header.span)
-        self.version = version.value; self.take(); self.end_line(); statements = []
+        self.lines()
+        # 0.2부터는 헤더를 생략할 수 있으며, 생략 시 현재 기본 언어 버전을 사용합니다.
+        if self.word("newcode"):
+            header = self.take(); version = self.current()
+            if version.kind != "number" or version.value not in ("0.1", "0.2"):
+                raise fail("THINKLOGIC ERROR", "unsupported language version", header.span)
+            self.version = version.value
+            self.take()
+            self.end_line()
+        else:
+            self.version = "0.2"
+        statements = []
         while self.current().kind != "eof": statements.append(self.statement()); self.lines()
         return Program(statements)
     def statement(self):

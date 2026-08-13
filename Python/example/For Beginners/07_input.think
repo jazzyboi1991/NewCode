@@ -1,0 +1,9 @@
+// 숫자와 문자열을 입력받습니다.
+newcode 0.2
+
+thought numberthink amount be listennumber
+thought wordthink label be listenwords
+
+speak "amount: ", amount
+speak "label: ", label
+
