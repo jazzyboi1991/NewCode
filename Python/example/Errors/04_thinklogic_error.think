@@ -1,0 +1,5 @@
+// verify를 닫지 않아 THINKLOGIC ERROR를 발생시킵니다.
+newcode 0.2
+verify 1 same 1
+    speak "block"
+

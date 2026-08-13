@@ -1,6 +1,0 @@
-thought numberthink count be 1
-
-repeatwhile count less 4
-speak "count: ", count
-thought count be count plus 1
-endrepeat

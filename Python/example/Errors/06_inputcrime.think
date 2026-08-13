@@ -1,0 +1,4 @@
+// 숫자로 읽을 수 없는 입력을 주면 INPUTCRIME이 발생합니다.
+newcode 0.2
+speak listennumber
+

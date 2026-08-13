@@ -1,0 +1,4 @@
+// 금지된 단어를 문자열에 넣어 WORDCRIME을 발생시킵니다.
+newcode 0.2
+speak "freedom"
+

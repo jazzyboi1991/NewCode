@@ -1,0 +1,4 @@
+// 이 파일은 모듈 오류를 일으키기 위한 보조 파일입니다.
+newcode 0.2
+speak "modules may contain routines only"
+

@@ -1,0 +1,6 @@
+// testthink 안에서 입력을 시도해 TESTCRIME을 발생시킵니다.
+newcode 0.2
+testthink "input is not isolated"
+    speak listennumber
+endtestthink
+

@@ -1,0 +1,5 @@
+// 목록에 없는 위치를 읽어 INDEXCRIME을 발생시킵니다.
+newcode 0.2
+thought listthink values be listthink(1, 2)
+speak get values at 2
+

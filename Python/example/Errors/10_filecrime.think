@@ -1,0 +1,4 @@
+// 실행 폴더 밖으로 나가는 경로를 사용해 FILECRIME을 발생시킵니다.
+newcode 0.2
+speak readfile "../outside.txt"
+

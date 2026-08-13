@@ -1,0 +1,4 @@
+// 조건이 계속 참인 반복문으로 WORKLIMIT을 발생시킵니다.
+newcode 0.2
+repeatwhile good
+endrepeat

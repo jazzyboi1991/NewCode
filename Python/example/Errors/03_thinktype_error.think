@@ -1,0 +1,5 @@
+// numberthink 변수에 문자열을 대입해 THINKTYPE ERROR를 발생시킵니다.
+newcode 0.2
+thought numberthink score be 100
+thought score be "one hundred"
+

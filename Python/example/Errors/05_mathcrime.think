@@ -1,0 +1,4 @@
+// 0으로 나누어 MATHCRIME을 발생시킵니다.
+newcode 0.2
+speak 10 divide 0
+

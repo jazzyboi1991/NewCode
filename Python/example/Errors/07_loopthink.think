@@ -1,0 +1,4 @@
+// 자기 자신을 모듈로 불러 순환 import를 만들어 LOOPTHINK를 발생시킵니다.
+newcode 0.2
+use loopgood from "07_loopthink.think"
+

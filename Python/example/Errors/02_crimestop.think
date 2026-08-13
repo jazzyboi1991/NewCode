@@ -1,0 +1,5 @@
+// 같은 이름을 두 번 선언해 CRIMESTOP을 발생시킵니다.
+newcode 0.2
+thought numberthink count be 1
+thought numberthink count be 2
+
