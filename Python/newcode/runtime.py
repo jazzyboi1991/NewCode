@@ -52,6 +52,19 @@ class Runtime:
         if isinstance(expr,Size): return len(self._value(expr.target))
         if isinstance(expr,Lines): return self._value(expr.target).splitlines()
         if isinstance(expr,JoinLines): return "\n".join(str(x) for x in self._value(expr.target))
+        if isinstance(expr,StringOp):
+            values = [self._value(arg) for arg in expr.args]
+            if expr.name == "length": return len(values[0])
+            if expr.name == "find": return values[0].find(values[1])
+            if expr.name == "replace":
+                value = values[0].replace(values[1], values[2])
+                self.censor.check(value, False, expr.span)
+                return value
+            if expr.name == "split": return values[0].split(values[1])
+            if expr.name == "joinwords":
+                value = str(values[1]).join(str(item) for item in values[0])
+                self.censor.check(value, False, expr.span)
+                return value
         if isinstance(expr,Slice):
             value=self._value(expr.target); return value[int(self._value(expr.start)):int(self._value(expr.stop))]
         if isinstance(expr,Get):
@@ -108,6 +121,7 @@ class Runtime:
             output=""
             for value,digits in statement.items:
                 result=self._value(value)
+                self._check_output(result, value.span)
                 if isinstance(result,str): self.censor.check(result,False,value.span)
                 output+=display(result) if digits is None else display(result,int(self._value(digits)))
             print(output)
@@ -172,10 +186,22 @@ class Runtime:
         if path.is_absolute() or ".." in path.parts: raise fail("FILECRIME","only safe relative paths are allowed",Span(1,1))
         return self.cwd/path
 
+    def _check_output(self, value, span):
+        if isinstance(value, str):
+            self.censor.check(value, False, span)
+        elif isinstance(value, list):
+            for item in value: self._check_output(item, span)
+        elif isinstance(value, dict):
+            for key, item in value.items():
+                self._check_output(str(key), span)
+                self._check_output(item, span)
+
 def display(value,digits=None):
     if isinstance(value,bool): return "good" if value else "ungood"
     if value is None: return "nothink"
     if isinstance(value,str): return value
+    if isinstance(value,list): return "[" + ", ".join(display(item) for item in value) + "]"
+    if isinstance(value,dict): return "{" + ", ".join(f"{key}: {display(item)}" for key,item in value.items()) + "}"
     sign="-" if value<0 else ""; value=abs(value); whole,remainder=divmod(value.numerator,value.denominator); count=28 if digits is None else digits; scale=10**count; part,tail=divmod(remainder*scale,value.denominator)
     if tail*2>=value.denominator: part+=1
     if part==scale: whole,part=whole+1,0

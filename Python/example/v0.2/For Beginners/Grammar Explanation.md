@@ -9,8 +9,8 @@
 저장소 루트인 `NewCode/`에서 실행합니다.
 
 ```sh
-python -m goodthink check "Python/example/For Beginners/01_calculator.think"
-python -m goodthink run "Python/example/For Beginners/01_calculator.think"
+python -m goodthink check "Python/example/v0.2/For Beginners/01_calculator.think"
+python -m goodthink run "Python/example/v0.2/For Beginners/01_calculator.think"
 ```
 
 `check`는 실행하지 않고 문법과 자료형을 검사합니다. `run`은 검사한 뒤 실제로
@@ -222,7 +222,7 @@ speak "label: ", label
 실행 예:
 
 ```sh
-printf '7\\nAlpha\\n' | python -m goodthink run "Python/example/For Beginners/07_input.think"
+printf '7\\nAlpha\\n' | python -m goodthink run "Python/example/v0.2/For Beginners/07_input.think"
 ```
 
 ---
@@ -381,7 +381,7 @@ endtestthink
 - `test` 명령으로 테스트 블록을 실행합니다.
 
 ```sh
-python -m goodthink test "Python/example/For Beginners/13_tests.think"
+python -m goodthink test "Python/example/v0.2/For Beginners/13_tests.think"
 ```
 
 ## 다음 학습 방법

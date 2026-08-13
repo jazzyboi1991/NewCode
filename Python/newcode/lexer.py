@@ -11,6 +11,7 @@ wordthink goodthink silencethink rawthink listthink recordthink indexthink nothi
 plus minus times divide more less same both either un join to good ungood get at field key
 change add remove size slice from foreach in endforeach trythink othercrime endtrythink
 readfile writefile appendfile lines joinlines use call testthink endtestthink
+length find replace split joinwords
 """.split()
 )
 TYPE_NAMES = frozenset({"numberthink", "wordthink", "goodthink", "silencethink", "rawthink", "listthink", "recordthink", "indexthink"})
@@ -58,7 +59,10 @@ class Lexer:
                 self._advance()
                 continue
             if ch == '"':
-                tokens.append(Token("string", self._string(span), span))
+                if self.source.startswith('"""', self.index):
+                    tokens.append(Token("string", self._multiline_string(span), span))
+                else:
+                    tokens.append(Token("string", self._string(span), span))
                 continue
             if ch.isascii() and ch.isdigit():
                 tokens.append(Token("number", self._number(span), span))
@@ -147,7 +151,7 @@ class Lexer:
                 if self.index >= len(self.source):
                     break
                 escaped = self.source[self.index]
-                table = {"n": "\n", "t": "\t", '"': '"', "\\": "\\"}
+                table = {"n": "\n", "r": "\r", "t": "\t", "b": "\b", "f": "\f", "v": "\v", '"': '"', "\\": "\\"}
                 if escaped not in table:
                     raise fail(
                         "THINKLOGIC ERROR", f"invalid string escape '\\{escaped}'", span
@@ -160,3 +164,28 @@ class Lexer:
             output.append(ch)
             self._advance()
         raise fail("THINKLOGIC ERROR", "unclosed string literal", span)
+
+    def _multiline_string(self, span):
+        self._advance(3)
+        output = []
+        table = {"n": "\n", "r": "\r", "t": "\t", "b": "\b", "f": "\f", "v": "\v", '"': '"', "\\": "\\"}
+        while self.index < len(self.source):
+            if self.source.startswith('"""', self.index):
+                self._advance(3)
+                value = "".join(output)
+                self.censor.check(value, False, span)
+                return value
+            ch = self.source[self.index]
+            if ch == "\\":
+                self._advance()
+                if self.index >= len(self.source) or self.source[self.index] not in table:
+                    escaped = self.source[self.index] if self.index < len(self.source) else ""
+                    raise fail("THINKLOGIC ERROR", f"invalid string escape '\\{escaped}'", span)
+                output.append(table[self.source[self.index]])
+                self._advance()
+                continue
+            if not ch.isascii() and ch not in "\n\r\t":
+                raise fail("WORDCRIME", "non-ASCII string", span)
+            output.append(ch)
+            self._advance()
+        raise fail("THINKLOGIC ERROR", "unclosed multiline string literal", span)

@@ -1,0 +1,9 @@
+// Newcode 0.3 문자열 처리 예제입니다.
+newcode 0.3
+
+thought wordthink text be "banana"
+speak length(text), ":", find(text, "nan")
+speak replace(text, "banana", "apple")
+thought listthink parts be split(text, "a")
+speak joinwords(parts, "-")
+

@@ -218,6 +218,12 @@ class JoinLines(Expr):
 
 
 @dataclass
+class StringOp(Expr):
+    name: str
+    args: list[Expr]
+
+
+@dataclass
 class ModuleUse(Stmt):
     name: str
     path: str

@@ -15,13 +15,20 @@ def load(path, censor, seen=None):
     path=Path(path).resolve()
     if path in seen: raise NewcodeError("LOOPTHINK", "cyclic module import", __import__('newcode.errors',fromlist=['Span']).Span(1,1))
     seen.add(path)
-    source=path.read_text(encoding="utf-8")
+    try:
+        source=path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise NewcodeError("MODULECRIME", f"cannot load module '{path}': {exc}", __import__('newcode.errors',fromlist=['Span']).Span(1,1)) from exc
     program=Parser(Lexer(source,censor).scan()).parse()
     routines=[]
     for statement in program.statements:
         if isinstance(statement,ModuleUse):
             module_path=(path.parent/statement.path).resolve()
-            if not str(module_path).startswith(str(path.parent)) or module_path.suffix != ".think":
+            try:
+                module_path.relative_to(path.parent)
+            except ValueError:
+                raise NewcodeError("MODULECRIME", "module path must be a safe relative .think file", statement.span)
+            if module_path.suffix != ".think":
                 raise NewcodeError("MODULECRIME", "module path must be a safe relative .think file", statement.span)
             child=load(module_path,censor,seen)
             routines.extend([Routine(r.span,r.return_type,f"{statement.name}.{r.name}",r.params,r.body) for r in child])
@@ -31,6 +38,10 @@ def load(path, censor, seen=None):
     return routines
 
 def format_source(source):
+    # Triple-quoted strings may contain meaningful line breaks and indentation.
+    # Leave such source byte-for-byte intact until the formatter has a full string-aware pass.
+    if '"""' in source:
+        return source if source.endswith("\n") else source + "\n"
     level=0; output=[]
     opens={"verify","repeatwhile","foreach","routine","trythink","testthink"}
     closes={"endverify","endrepeat","endforeach","endroutine","endtrythink","endtestthink"}
@@ -46,6 +57,18 @@ def format_source(source):
     return "\n".join(output)+"\n"
 
 def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    # CLI 단축형은 언어 문법과 분리된 명령행 편의 기능입니다.
+    if argv and (argv[0].endswith(".think") or Path(argv[0]).exists()):
+        argv = ["run", *argv]
+    elif argv and argv[0] in {"-c", "-f", "-t"}:
+        argv = [{"-c": "check", "-f": "format", "-t": "test"}[argv[0]], *argv[1:]]
+    elif argv and argv[0] == "--tokens":
+        argv = ["inspect", "--tokens", *argv[1:]]
+    elif argv and argv[0] == "--ast":
+        argv = ["inspect", "--ast", *argv[1:]]
+    elif argv and argv[0] == "--policy":
+        argv = ["policy", "check", *argv[1:]]
     ap=argparse.ArgumentParser(prog="goodthink")
     ap.add_argument("command", choices=("run","check","version","format","inspect","policy","test"))
     ap.add_argument("rest", nargs="*"); ap.add_argument("--write",action="store_true"); ap.add_argument("--trace",action="store_true"); ap.add_argument("--tokens",action="store_true"); ap.add_argument("--ast",action="store_true")

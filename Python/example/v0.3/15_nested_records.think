@@ -1,0 +1,6 @@
+// Newcode 0.3 중첩 기록 자료형 예제입니다.
+newcode 0.3
+
+thought recordthink person be recordthink(profile be recordthink(name be "Ada"), scores be listthink(10, 20))
+speak get get person field profile field name
+

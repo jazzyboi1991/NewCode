@@ -10,9 +10,9 @@ Newcode는 조지 오웰의 *1984*에 등장하는 신어(Newspeak)에서 영감
 
 ## 현재 상태
 
-언어 사양 버전은 **0.2**, Python 구현 버전은 **0.2.0**입니다. 실행 코드는 `Python/` 아래에 있으며, 복합 자료형·파일·모듈·개발 도구를 포함합니다.
+언어 사양 버전은 **0.3**, Python 구현 버전은 **0.3.0**입니다. 실행 코드는 `Python/` 아래에 있으며, 문자열 처리·복합 자료형·파일·모듈·개발 도구를 포함합니다.
 
-현재 구현은 Python 참조 구현 0.2.0입니다. 0.1 예제의 하위 호환성을 유지하면서 복합 자료형, 파일, 모듈, 포맷·추적·토큰 검사 도구를 제공합니다.
+현재 구현은 Python 참조 구현 0.3.0입니다. 0.1·0.2 예제의 하위 호환성을 유지하면서 문자열 처리, 중첩 기록, 파일·모듈 진단, CLI 단축형을 제공합니다.
 
 ## 요구 사항
 
@@ -26,23 +26,23 @@ Newcode는 조지 오웰의 *1984*에 등장하는 신어(Newspeak)에서 영감
 
 ```sh
 python3 -m goodthink version
-python3 -m goodthink check "Python/example/For Beginners/01_calculator.think"
-python3 -m goodthink run "Python/example/For Beginners/01_calculator.think"
+python3 -m goodthink check "Python/example/v0.2/For Beginners/01_calculator.think"
+python3 -m goodthink run "Python/example/v0.2/For Beginners/01_calculator.think"
 ```
 
 `Python/` 디렉터리로 이동한 경우에는 경로에서 `Python/`을 빼야 합니다.
 
 ```sh
 cd Python
-python3 -m goodthink run "example/For Beginners/01_calculator.think"
+python3 -m goodthink run "example/v0.2/For Beginners/01_calculator.think"
 ```
 
 저장소 루트에서는 기존 진입점도 사용할 수 있습니다.
 
 ```sh
 PYTHONPATH=Python python3 Python/goodthink.py version
-PYTHONPATH=Python python3 Python/goodthink.py check Python/example/v0.1/victory.think
-PYTHONPATH=Python python3 Python/goodthink.py run Python/example/v0.1/victory.think
+PYTHONPATH=Python python3 Python/goodthink.py check "Python/example/v0.2/For Beginners/05_routines.think"
+PYTHONPATH=Python python3 Python/goodthink.py run "Python/example/v0.2/For Beginners/05_routines.think"
 ```
 
 CLI는 다음 명령을 제공합니다.
@@ -56,6 +56,19 @@ goodthink inspect --tokens <program.think>
 goodthink inspect --ast <program.think>
 goodthink policy check "text"
 goodthink test <program.think>
+```
+
+0.3에서는 CLI에만 단축형을 제공합니다. 언어 문법의 신어 명령어에는 별칭이나
+축약형을 추가하지 않습니다.
+
+```text
+goodthink program.think
+goodthink -c program.think
+goodthink -f program.think
+goodthink -t program.think
+goodthink --tokens program.think
+goodthink --ast program.think
+goodthink --policy "text"
 ```
 
 `check`는 프로그램을 실행하지 않고 lexing, parsing, 정적 검사를 수행합니다. `run`은 같은 검사를 수행한 다음 프로그램을 인터프리트합니다. 프로그램 파일의 확장자는 반드시 `.think`여야 합니다. 오류에는 진단 코드가 포함되며, 소스 위치를 확인할 수 있는 경우 해당 줄·열과 caret 표시도 함께 출력됩니다.
@@ -73,7 +86,7 @@ goodthink test <program.think>
 
 ### 파일 헤더
 
-Newcode 0.2부터는 `newcode 0.2` 헤더를 생략할 수 있습니다. 헤더가 없으면 기본적으로 0.2 문법으로 해석됩니다. 0.1 호환 파일은 계속 `newcode 0.1`을 명시해야 합니다.
+Newcode 0.3부터는 언어 헤더를 생략할 수 있습니다. 헤더가 없으면 기본적으로 0.3 문법으로 해석됩니다. 기존 프로그램은 `newcode 0.1` 또는 `newcode 0.2`를 명시해 계속 실행할 수 있습니다.
 
 ```newcode
 thought numberthink count be 3
@@ -87,7 +100,7 @@ speak count
 ```sh
 cd Python
 python3 -m pip install --user -e .
-goodthink run "example/For Beginners/01_calculator.think"
+goodthink run "example/v0.2/For Beginners/01_calculator.think"
 ```
 
 ## Newcode 프로그램 예시
@@ -124,6 +137,10 @@ Newcode는 일반적인 프로그래밍 용어 대신 신어풍 키워드를 사
 | 파일·모듈      | `readfile`, `writefile`, `appendfile`, `use`, `call`   |
 
 ## 언어 모델
+
+0.3은 `length(...)`, `find(...)`, `replace(...)`, `split(...)`, `joinwords(...)`
+문자열 표현식과 `"""..."""` 여러 줄 문자열을 지원합니다. 기존 명령어는 신어적
+제약을 보존하기 위해 축약하지 않으며, 짧은 표현은 CLI에서만 제공합니다.
 
 Newcode 0.2는 0.1의 단순 변수와 routine을 유지하면서 `nothink`, `maybe`, 복합 자료형, `foreach`, 파일·모듈 기능을 추가하는 버전입니다.
 
@@ -162,7 +179,9 @@ NewCode/
 │   ├── test_parser.py            # parser 인접 결함 회귀 테스트
 │   ├── test_newcode02.py         # 0.2 자료형·파일·모듈·예외 테스트
 │   ├── example/
-│   │   ├── For Beginners/        # 기능별 초보자 예제
+│   │   ├── v0.1/                 # 0.1 회귀 예제
+│   │   ├── v0.2/                 # 0.2 예제·초보자·오류 예제
+│   │   ├── v0.3/                 # 0.3 문자열·중첩 기록 예제
 │   │   ├── v0.1/                 # 0.1 회귀 예제와 문법 문서
 │   │   └── v0.2/                 # 0.2 모듈·테스트 예제
 │   └── newcode/

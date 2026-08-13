@@ -32,6 +32,7 @@ from newcode.model import (
     Verify,
     Word,
     Size,
+    StringOp,
     Try,
     TestThink,
 )
@@ -50,6 +51,10 @@ def expression_calls(expr):
     elif isinstance(expr, Binary):
         yield from expression_calls(expr.left)
         yield from expression_calls(expr.right)
+
+    elif isinstance(expr, StringOp):
+        for arg in expr.args:
+            yield from expression_calls(arg)
 
 
 def statement_calls(stmt):
@@ -201,6 +206,19 @@ class Validator:
         if isinstance(expr, LiteralValue):
             return "nothink"
         if isinstance(expr, Composite):
+            if expr.type_name == "recordthink":
+                fields = set()
+                for key, value in expr.items:
+                    if not isinstance(key, Name):
+                        raise fail("THINKLOGIC ERROR", "record fields require identifiers", key.span)
+                    if key.value in fields:
+                        raise fail("CRIMESTOP", f"duplicate record field '{key.value}'", key.span)
+                    fields.add(key.value)
+                    self._type(value)
+            elif expr.type_name == "listthink":
+                for item in expr.items: self._type(item)
+            elif expr.type_name == "indexthink":
+                for key, value in expr.items: self._type(key); self._type(value)
             return expr.type_name
         if isinstance(expr, FileRead):
             return "rawthink"
@@ -210,6 +228,13 @@ class Validator:
             return "listthink"
         if isinstance(expr, JoinLines):
             return "wordthink"
+        if isinstance(expr, StringOp):
+            expected = {"length": ("wordthink",), "find": ("wordthink", "wordthink"), "replace": ("wordthink", "wordthink", "wordthink"), "split": ("wordthink", "wordthink"), "joinwords": ("listthink", "wordthink")}[expr.name]
+            for arg, wanted in zip(expr.args, expected):
+                got = self._type(arg)
+                if got not in (wanted, "rawthink"):
+                    raise fail("THINKTYPE ERROR", f"expected {wanted}, received {got}", arg.span)
+            return "numberthink" if expr.name in ("length", "find") else ("listthink" if expr.name == "split" else "wordthink")
         if isinstance(expr, Slice):
             return "wordthink"
         if isinstance(expr, Get):

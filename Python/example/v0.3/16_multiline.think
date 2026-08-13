@@ -1,0 +1,7 @@
+// Newcode 0.3 여러 줄 문자열과 확장 escape 예제입니다.
+newcode 0.3
+
+thought wordthink note be """first\r
+second\tline"""
+speak note
+

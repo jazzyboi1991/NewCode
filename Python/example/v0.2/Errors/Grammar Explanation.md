@@ -9,7 +9,7 @@
 저장소 루트인 `NewCode/`에서 실행합니다.
 
 ```sh
-python -m goodthink check "Python/example/Errors/01_wordcrime.think"
+python -m goodthink check "Python/example/v0.2/Errors/01_wordcrime.think"
 ```
 
 문법·정적 검사에서 발생하는 오류는 `check`, 실행 중 발생하는 오류는 `run`,
@@ -53,7 +53,7 @@ speak "freedom"
 실행:
 
 ```sh
-python -m goodthink check "Python/example/Errors/01_wordcrime.think"
+python -m goodthink check "Python/example/v0.2/Errors/01_wordcrime.think"
 ```
 
 ---
@@ -78,7 +78,7 @@ thought numberthink count be 2
 실행:
 
 ```sh
-python -m goodthink check "Python/example/Errors/02_crimestop.think"
+python -m goodthink check "Python/example/v0.2/Errors/02_crimestop.think"
 ```
 
 ---
@@ -104,7 +104,7 @@ thought score be "one hundred"
 실행:
 
 ```sh
-python -m goodthink check "Python/example/Errors/03_thinktype_error.think"
+python -m goodthink check "Python/example/v0.2/Errors/03_thinktype_error.think"
 ```
 
 ---
@@ -130,7 +130,7 @@ verify 1 same 1
 실행:
 
 ```sh
-python -m goodthink check "Python/example/Errors/04_thinklogic_error.think"
+python -m goodthink check "Python/example/v0.2/Errors/04_thinklogic_error.think"
 ```
 
 ---
@@ -155,7 +155,7 @@ speak 10 divide 0
 실행:
 
 ```sh
-python -m goodthink run "Python/example/Errors/05_mathcrime.think"
+python -m goodthink run "Python/example/v0.2/Errors/05_mathcrime.think"
 ```
 
 ---
@@ -179,7 +179,7 @@ speak listennumber
 실행:
 
 ```sh
-printf 'not-a-number\\n' | python -m goodthink run "Python/example/Errors/06_inputcrime.think"
+printf 'not-a-number\\n' | python -m goodthink run "Python/example/v0.2/Errors/06_inputcrime.think"
 ```
 
 ---
@@ -204,7 +204,7 @@ use loopgood from "07_loopthink.think"
 실행:
 
 ```sh
-python -m goodthink check "Python/example/Errors/07_loopthink.think"
+python -m goodthink check "Python/example/v0.2/Errors/07_loopthink.think"
 ```
 
 ---
@@ -230,7 +230,7 @@ endrepeat
 실행:
 
 ```sh
-python -m goodthink run "Python/example/Errors/08_worklimit.think"
+python -m goodthink run "Python/example/v0.2/Errors/08_worklimit.think"
 ```
 
 실행 제한에 도달하기까지 잠시 걸릴 수 있습니다.
@@ -258,7 +258,7 @@ speak get values at 2
 실행:
 
 ```sh
-python -m goodthink run "Python/example/Errors/09_indexcrime.think"
+python -m goodthink run "Python/example/v0.2/Errors/09_indexcrime.think"
 ```
 
 ---
@@ -283,7 +283,7 @@ speak readfile "../outside.txt"
 실행:
 
 ```sh
-python -m goodthink run "Python/example/Errors/10_filecrime.think"
+python -m goodthink run "Python/example/v0.2/Errors/10_filecrime.think"
 ```
 
 ---
@@ -317,7 +317,7 @@ speak "modules may contain routines only"
 실행:
 
 ```sh
-python -m goodthink check "Python/example/Errors/11_modulecrime.think"
+python -m goodthink check "Python/example/v0.2/Errors/11_modulecrime.think"
 ```
 
 ---
@@ -344,7 +344,7 @@ endtestthink
 실행:
 
 ```sh
-python -m goodthink test "Python/example/Errors/12_testcrime.think"
+python -m goodthink test "Python/example/v0.2/Errors/12_testcrime.think"
 ```
 
 ## 오류를 학습하는 방법
@@ -354,4 +354,3 @@ python -m goodthink test "Python/example/Errors/12_testcrime.think"
 3. 오류를 일으킨 문장을 주석 처리하거나 올바르게 고쳐 봅니다.
 4. `check`가 통과한 뒤 `run` 또는 `test`를 다시 실행합니다.
 5. 일반 기능 예제는 `../For Beginners/` 폴더에서 참고합니다.
-

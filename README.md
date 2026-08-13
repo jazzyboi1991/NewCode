@@ -17,8 +17,8 @@ extension.
 
 ## Current status
 
-The language specification is version **0.2** and the Python package reports
-implementation version **0.2.0**. Rust and browser ports remain future work;
+The language specification is version **0.3** and the Python package reports
+implementation version **0.3.0**. Rust and browser ports remain future work;
 the executable reference implementation is under `Python/`.
 
 `goodthink version`, `run`, `check`, `format`, `inspect`, `policy`, and `test`
@@ -36,23 +36,23 @@ may be relative to the current directory or absolute paths:
 
 ```sh
 python3 -m goodthink version
-python3 -m goodthink check "Python/example/For Beginners/01_calculator.think"
-python3 -m goodthink run "Python/example/For Beginners/01_calculator.think"
+python3 -m goodthink check "Python/example/v0.2/For Beginners/01_calculator.think"
+python3 -m goodthink run "Python/example/v0.2/For Beginners/01_calculator.think"
 ```
 
 If you change into `Python/`, remove the `Python/` prefix from the source path:
 
 ```sh
 cd Python
-python3 -m goodthink run "example/For Beginners/01_calculator.think"
+python3 -m goodthink run "example/v0.2/For Beginners/01_calculator.think"
 ```
 
 The original entry point also works from the repository root:
 
 ```sh
 PYTHONPATH=Python python3 Python/goodthink.py version
-PYTHONPATH=Python python3 Python/goodthink.py check Python/example/v0.1/victory.think
-PYTHONPATH=Python python3 Python/goodthink.py run Python/example/v0.1/victory.think
+PYTHONPATH=Python python3 Python/goodthink.py check "Python/example/v0.2/For Beginners/05_routines.think"
+PYTHONPATH=Python python3 Python/goodthink.py run "Python/example/v0.2/For Beginners/05_routines.think"
 ```
 
 The CLI accepts these commands:
@@ -66,6 +66,19 @@ goodthink check [--trace] <program.think>
 goodthink inspect --tokens|--ast <program.think>
 goodthink policy check "text"
 goodthink test <program.think>
+```
+
+Version 0.3 adds shortcuts only to the CLI. Newcode language commands keep their
+full Newspeak-style names and do not gain aliases or abbreviations:
+
+```text
+goodthink program.think
+goodthink -c program.think
+goodthink -f program.think
+goodthink -t program.think
+goodthink --tokens program.think
+goodthink --ast program.think
+goodthink --policy "text"
 ```
 
 `check` lexes, parses, and statically validates a program without executing
@@ -86,8 +99,9 @@ Command summary:
 
 ### Optional header
 
-Newcode 0.2 files may omit the `newcode 0.2` header. A missing header defaults to
-Newcode 0.2. Keep `newcode 0.1` in legacy 0.1 programs when using the old syntax.
+Newcode 0.3 files may omit the language header. A missing header defaults to
+Newcode 0.3. Explicit `newcode 0.1` and `newcode 0.2` headers remain supported for
+legacy programs.
 
 ```newcode
 thought numberthink count be 3
@@ -102,7 +116,7 @@ short `goodthink` command from any directory:
 ```sh
 cd Python
 python3 -m pip install --user -e .
-goodthink run "example/For Beginners/01_calculator.think"
+goodthink run "example/v0.2/For Beginners/01_calculator.think"
 ```
 
 ## A Newcode program
@@ -138,6 +152,11 @@ programming terminology:
 | Input                           | `listennumber`, `listenwords`                          |
 
 ## Language model
+
+Newcode 0.3 adds `length(...)`, `find(...)`, `replace(...)`, `split(...)`, and
+`joinwords(...)`, plus triple-quoted multiline strings (`"""..."""`). Language
+commands deliberately keep their full Newspeak-style names; only the CLI has
+short forms.
 
 Newcode 0.2 retains the four basic types and adds:
 
@@ -197,7 +216,9 @@ NewCode/
 │   ├── test_parser.py            # Regression tests for parser-adjacent bugs
 │   ├── test_newcode02.py         # 0.2 type/file/module/exception tests
 │   ├── example/
-│   │   ├── For Beginners/        # feature-by-feature beginner examples
+│   │   ├── v0.1/                 # 0.1 regression examples
+│   │   ├── v0.2/                 # 0.2 examples, beginners, and errors
+│   │   ├── v0.3/                 # 0.3 string and nested-record examples
 │   │   ├── v0.1/                 # 0.1 regression examples and grammar docs
 │   │   └── v0.2/                 # 0.2 module and test examples
 │   └── newcode/

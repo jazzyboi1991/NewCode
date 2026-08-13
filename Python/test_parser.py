@@ -13,7 +13,7 @@ ROOT = Path(__file__).parent
 
 class ParserTests(unittest.TestCase):
     def parse_example(self):
-        source_path = ROOT / "example" / "v0.1" / "victory.think"
+        source_path = ROOT / "example" / "v0.2" / "For Beginners" / "05_routines.think"
         source = source_path.read_text(encoding="utf-8")
         censor = Censor(ROOT / "prohibited_words.json")
         return Parser(Lexer(source, censor).scan()).parse()
