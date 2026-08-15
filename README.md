@@ -22,7 +22,9 @@ implementation version **0.3.0**. Rust and browser ports remain future work;
 the executable reference implementation is under `Python/`.
 
 `goodthink version`, `run`, `check`, `format`, `inspect`, `policy`, and `test`
-are available. The bundled 0.1 examples remain regression fixtures.
+are available. 0.1 compatibility remains covered by the regression suite.
+
+See [`CHANGELOG.md`](CHANGELOG.md) for the version history.
 
 ## Requirements
 
