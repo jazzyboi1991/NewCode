@@ -1,6 +1,7 @@
 import argparse, sys, time
+import copy
 from pathlib import Path
-from dataclasses import asdict, is_dataclass
+from dataclasses import asdict, fields, is_dataclass
 from . import LANGUAGE_VERSION, VERSION
 from .censor import Censor
 from .errors import NewcodeError
@@ -8,7 +9,46 @@ from .lexer import Lexer
 from .parser import Parser
 from .runtime import Runtime
 from .validator import Validator
-from .model import ModuleUse, Routine, TestThink, Program
+from .model import Call, ModuleUse, NativeRoutine, Routine, TestThink, Program
+from .standard import STANDARD_PREFIX, standard_module
+
+
+def _prefix_call_names(value, module):
+    if isinstance(value, list) or isinstance(value, tuple):
+        for item in value:
+            _prefix_call_names(item, module)
+    elif isinstance(value, Call):
+        value.name = f"{module}.{value.name}"
+        for argument in value.args:
+            _prefix_call_names(argument, module)
+    elif is_dataclass(value):
+        for field in fields(value):
+            _prefix_call_names(getattr(value, field.name), module)
+
+
+def namespace_routine(routine, module):
+    result = copy.deepcopy(routine)
+    result.name = f"{module}.{result.name}"
+    if isinstance(result, Routine):
+        _prefix_call_names(result.body, module)
+    return result
+
+
+def load_import(base, module_path, censor, seen=None, span=None):
+    standard = standard_module(module_path)
+    if standard is not None:
+        return list(standard.values())
+    if module_path.startswith(STANDARD_PREFIX):
+        raise NewcodeError("MODULECRIME", f"unknown standard module '{module_path}'", span or __import__('newcode.errors',fromlist=['Span']).Span(1,1))
+
+    path = (Path(base) / module_path).resolve()
+    try:
+        path.relative_to(Path(base).resolve())
+    except ValueError:
+        raise NewcodeError("MODULECRIME", "module path must be a safe relative .think file", span or __import__('newcode.errors',fromlist=['Span']).Span(1,1))
+    if path.suffix != ".think":
+        raise NewcodeError("MODULECRIME", "module path must be a safe relative .think file", span or __import__('newcode.errors',fromlist=['Span']).Span(1,1))
+    return load(path, censor, seen)
 
 def load(path, censor, seen=None):
     seen=set() if seen is None else seen
@@ -23,15 +63,8 @@ def load(path, censor, seen=None):
     routines=[]
     for statement in program.statements:
         if isinstance(statement,ModuleUse):
-            module_path=(path.parent/statement.path).resolve()
-            try:
-                module_path.relative_to(path.parent)
-            except ValueError:
-                raise NewcodeError("MODULECRIME", "module path must be a safe relative .think file", statement.span)
-            if module_path.suffix != ".think":
-                raise NewcodeError("MODULECRIME", "module path must be a safe relative .think file", statement.span)
-            child=load(module_path,censor,seen)
-            routines.extend([Routine(r.span,r.return_type,f"{statement.name}.{r.name}",r.params,r.body) for r in child])
+            child=load_import(path.parent, statement.path, censor, seen, statement.span)
+            routines.extend([namespace_routine(r, statement.name) for r in child])
         elif isinstance(statement,Routine): routines.append(statement)
         elif isinstance(statement,ModuleUse): pass
         else: raise NewcodeError("MODULECRIME", "modules may contain routines only", statement.span)
@@ -88,7 +121,7 @@ def main(argv=None):
         imported=[]
         for statement in program.statements:
             if isinstance(statement,ModuleUse):
-                imported.extend([Routine(r.span,r.return_type,f"{statement.name}.{r.name}",r.params,r.body) for r in load(path.parent/statement.path,censor)])
+                imported.extend([namespace_routine(r, statement.name) for r in load_import(path.parent, statement.path, censor, span=statement.span)])
         program.statements.extend(imported)
         routines=Validator(program).validate()
         if args.command=="inspect":

@@ -4,9 +4,25 @@ Newcode와 Python 참조 구현의 주요 변경 사항을 기록합니다.
 
 ## [Unreleased]
 
-- 버전별 예제를 `Python/example/v0.1/`, `v0.2/`, `v0.3/`으로 정리했습니다.
-- 0.3 예제와 오류 학습 문서를 보강했습니다.
-- 다음 버전에서 표준 라이브러리와 배포 자동화를 검토할 예정입니다.
+## [0.4.0] — 2026-08-16
+
+### Added
+
+- 예약된 `standard/` 표준 모듈 레지스트리를 추가했습니다.
+- `randomthink`의 시드, 정수 난수, 정확한 난수 분수를 추가했습니다.
+- `timethink`의 로컬 시간 record와 Unix epoch 초를 추가했습니다.
+- `paththink`의 안전한 상대 경로 조합·분해·일반 파일 존재 확인을 추가했습니다.
+- 0.4 표준 모듈 예제와 회귀 테스트를 추가했습니다.
+
+### Changed
+
+- 헤더 없는 프로그램은 Newcode 0.4로 해석합니다.
+- 파일 명령과 `paththink`가 같은 상대 경로 보안 검사를 사용합니다.
+
+### Compatibility
+
+- `newcode 0.1`~`newcode 0.3` 헤더를 계속 지원합니다.
+- 언어 명령어의 별칭·축약형을 추가하지 않았습니다.
 
 ## [0.3.0] — 2026-08-13
 
@@ -74,4 +90,3 @@ goodthink --policy "text"
 - `numberthink`, `wordthink`, `goodthink`, `silencethink` 자료형을 추가했습니다.
 - 숫자 연산, 문자열 결합, 입력, 출력, 소수 자릿수 출력을 지원했습니다.
 - Newspeak-inspired 검열 정책과 `WORDCRIME` 진단을 도입했습니다.
-

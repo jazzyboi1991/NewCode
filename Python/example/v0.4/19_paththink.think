@@ -1,0 +1,13 @@
+// paththink: 안전한 상대 경로를 만들고 파일 존재 여부를 확인합니다.
+newcode 0.4
+
+use paththink from "standard/paththink.think"
+
+// /를 사용한 상대 경로만 허용됩니다.
+thought wordthink example be call paththink joinpath(".", "17_randomthink.think")
+
+speak "path: ", example
+speak "name: ", call paththink filename(example)
+speak "extension: ", call paththink extension(example)
+speak "parent: ", call paththink parentpath(example)
+speak "exists: ", call paththink pathexists(example)

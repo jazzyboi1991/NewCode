@@ -121,6 +121,16 @@ class Routine(Stmt):
 
 
 @dataclass
+class NativeRoutine(Stmt):
+    """A standard-library routine implemented by the reference runtime."""
+
+    return_type: str
+    name: str
+    params: list[tuple[str, str, Span]]
+    handler: object
+
+
+@dataclass
 class CallStatement(Stmt):
     call: Call
 

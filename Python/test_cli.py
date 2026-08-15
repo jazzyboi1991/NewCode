@@ -84,7 +84,7 @@ class CliTests(unittest.TestCase):
 
         self.assertEqual(code, 0)
         self.assertEqual(errors, "")
-        self.assertIn("goodthink 0.3.0 (Newcode 0.3)", output)
+        self.assertEqual(output, "goodthink 0.4.0 (Newcode 0.4)\n")
 
     def test_formatter_write_updates_file(self):
         source = "newcode 0.2\nverify 1 same 1\n    speak 1\nendverify\n"

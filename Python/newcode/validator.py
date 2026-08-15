@@ -18,6 +18,7 @@ from newcode.model import (
     Lines,
     LiteralValue,
     ModuleUse,
+    NativeRoutine,
     Name,
     Next,
     Number,
@@ -92,7 +93,7 @@ class Validator:
 
     def validate(self):
         for statement in self.program.statements:
-            if isinstance(statement, Routine):
+            if isinstance(statement, (Routine, NativeRoutine)):
                 if statement.name in self.routines:
                     raise fail(
                         "CRIMESTOP",
@@ -113,9 +114,10 @@ class Validator:
         self._reject_recursion()
 
         for routine in self.routines.values():
-            self._routine(routine)
+            if isinstance(routine, Routine):
+                self._routine(routine)
 
-        self._block([x for x in self.program.statements if not isinstance(x, Routine)])
+        self._block([x for x in self.program.statements if not isinstance(x, (Routine, NativeRoutine))])
 
         return self.routines
 
@@ -123,7 +125,7 @@ class Validator:
         graph = {
             name: {
                 call
-                for statement in routine.body
+                for statement in getattr(routine, "body", [])
                 for call in statement_calls(statement)
                 if call in self.routines
             }

@@ -1,0 +1,13 @@
+// randomthink: 시드로 재현 가능한 난수를 만듭니다.
+newcode 0.4
+
+// 같은 시드는 같은 실행 순서의 난수 결과를 만듭니다.
+use randomthink from "standard/randomthink.think"
+call randomthink setseed(1984)
+
+// randomnumber는 두 끝을 포함하는 정수 난수를 반환합니다.
+thought numberthink roll be call randomthink randomnumber(1, 6)
+thought numberthink part be call randomthink randomfraction()
+
+speak "roll: ", roll
+speak "fraction: ", part to 4

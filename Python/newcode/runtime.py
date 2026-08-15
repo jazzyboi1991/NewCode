@@ -1,9 +1,13 @@
 import re
+import random
+import time
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from newcode import MAX_STEPS
 from newcode.errors import NewcodeError, Span, fail
 from newcode.model import *
+from newcode.paths import safe_file_path
 
 @dataclass
 class Variable:
@@ -16,11 +20,14 @@ class ReturnFlow(Exception):
     def __init__(self, value): self.value=value
 
 class Runtime:
-    def __init__(self, censor, routines, cwd=None, test_mode=False):
+    def __init__(self, censor, routines, cwd=None, test_mode=False, now_provider=None, time_provider=None):
         self.censor,self.routines,self.cwd=censor,routines,Path(cwd or Path.cwd())
         self.test_mode = test_mode
+        self.random_generator = random.Random()
+        self.now_provider = now_provider or (lambda: datetime.now().astimezone())
+        self.time_provider = time_provider or time.time
         self.global_scopes,self.local_scopes=[{}],[]; self.steps=self.loop_depth=0
-    def execute(self, program): self._block([x for x in program.statements if not isinstance(x,Routine)])
+    def execute(self, program): self._block([x for x in program.statements if not isinstance(x,(Routine,NativeRoutine))])
     def _scopes(self): return self.local_scopes if self.local_scopes else self.global_scopes
     def _tick(self, span):
         self.steps+=1
@@ -46,7 +53,7 @@ class Runtime:
             if expr.type_name=="listthink": return [self._value(x) for x in expr.items]
             return {(k.value if isinstance(k,Name) else self._value(k)):self._value(v) for k,v in expr.items}
         if isinstance(expr,FileRead):
-            path=self._safe_path(self._value(expr.path))
+            path=self._safe_path(self._value(expr.path), expr.path.span)
             try: return path.read_text(encoding="utf-8")
             except OSError as exc: raise fail("FILECRIME",str(exc),expr.span)
         if isinstance(expr,Size): return len(self._value(expr.target))
@@ -102,6 +109,8 @@ class Runtime:
         return -fraction(raw[1:]) if raw.startswith("-") else fraction(raw)
     def _call(self, call):
         routine=self.routines[call.name]; values=[self._value(x) for x in call.args]
+        if isinstance(routine, NativeRoutine):
+            return routine.handler(self, values, call.span)
         scope={name:Variable(typ,val) for val,(typ,name,_) in zip(values,routine.params)}
         saved=self.local_scopes; self.local_scopes=[scope]; old=self.loop_depth; self.loop_depth=0
         try:
@@ -163,7 +172,7 @@ class Runtime:
         elif isinstance(statement,CallStatement): self._value(statement.call)
         elif isinstance(statement,FileWrite):
             if self.test_mode: raise fail("TESTCRIME", "file writing is unavailable in testthink", statement.span)
-            path=self._safe_path(self._value(statement.path)); value=self._value(statement.value)
+            path=self._safe_path(self._value(statement.path), statement.path.span); value=self._value(statement.value)
             if isinstance(value,str): self.censor.check(value,False,statement.value.span)
             try:
                 if statement.action=="writefile": path.write_text(str(value),encoding="utf-8")
@@ -181,10 +190,8 @@ class Runtime:
                 if handler is None:
                     raise
                 self._nested(handler.body)
-    def _safe_path(self, raw):
-        path=Path(str(raw))
-        if path.is_absolute() or ".." in path.parts: raise fail("FILECRIME","only safe relative paths are allowed",Span(1,1))
-        return self.cwd/path
+    def _safe_path(self, raw, span):
+        return safe_file_path(self.cwd, raw, span)
 
     def _check_output(self, value, span):
         if isinstance(value, str):

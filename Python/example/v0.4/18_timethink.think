@@ -1,0 +1,12 @@
+// timethink: 실행 컴퓨터의 로컬 시간을 recordthink로 받습니다.
+newcode 0.4
+
+use timethink from "standard/timethink.think"
+
+// currenttime은 year, month, day, hour, minute, second 필드를 가집니다.
+thought recordthink current be call timethink currenttime()
+thought numberthink count be call timethink timecount()
+
+speak "current: ", current
+speak "year: ", get current field year
+speak "epoch seconds: ", count

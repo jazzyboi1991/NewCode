@@ -17,7 +17,9 @@ class HeaderlessProgramTests(unittest.TestCase):
     def test_headerless_02_program_runs(self):
         source = "thought numberthink count be 2\nspeak count plus 1\n"
         censor = Censor(ROOT / "prohibited_words.json")
-        program = Parser(Lexer(source, censor).scan()).parse()
+        parser = Parser(Lexer(source, censor).scan())
+        program = parser.parse()
+        self.assertEqual(parser.version, "0.4")
         routines = Validator(program).validate()
         output = io.StringIO()
         with redirect_stdout(output):

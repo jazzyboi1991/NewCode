@@ -17,14 +17,16 @@ extension.
 
 ## Current status
 
-The language specification is version **0.3** and the Python package reports
-implementation version **0.3.0**. Rust and browser ports remain future work;
+The language specification is version **0.4** and the Python package reports
+implementation version **0.4.0**. Rust and browser ports remain future work;
 the executable reference implementation is under `Python/`.
 
 `goodthink version`, `run`, `check`, `format`, `inspect`, `policy`, and `test`
 are available. 0.1 compatibility remains covered by the regression suite.
 
-See [`CHANGELOG.md`](CHANGELOG.md) for the version history.
+Version 0.4 adds reserved standard modules for deterministic random values,
+local time, and safe relative paths. See [`CHANGELOG.md`](CHANGELOG.md) for the
+version history.
 
 ## Requirements
 
@@ -101,9 +103,9 @@ Command summary:
 
 ### Optional header
 
-Newcode 0.3 files may omit the language header. A missing header defaults to
-Newcode 0.3. Explicit `newcode 0.1` and `newcode 0.2` headers remain supported for
-legacy programs.
+Newcode 0.4 files may omit the language header. A missing header defaults to
+Newcode 0.4. Explicit `newcode 0.1`, `newcode 0.2`, and `newcode 0.3` headers
+remain supported for legacy programs.
 
 ```newcode
 thought numberthink count be 3
@@ -156,9 +158,36 @@ programming terminology:
 ## Language model
 
 Newcode 0.3 adds `length(...)`, `find(...)`, `replace(...)`, `split(...)`, and
-`joinwords(...)`, plus triple-quoted multiline strings (`"""..."""`). Language
-commands deliberately keep their full Newspeak-style names; only the CLI has
-short forms.
+`joinwords(...)`, plus triple-quoted multiline strings (`"""..."""`). Newcode
+0.4 adds standard modules without adding language aliases or abbreviated
+keywords. Language commands deliberately keep their full Newspeak-style names;
+only the CLI has short forms.
+
+### Standard modules (0.4)
+
+Standard modules use the existing `use` and `call` syntax. Their reserved
+`standard/` paths are supplied by the interpreter and cannot be replaced by a
+project file.
+
+```newcode
+use randomthink from "standard/randomthink.think"
+use timethink from "standard/timethink.think"
+use paththink from "standard/paththink.think"
+```
+
+| Module | Routine | Result |
+| --- | --- | --- |
+| `randomthink` | `setseed(number)` | Sets a per-run integer seed; returns `silencethink`. |
+|  | `randomnumber(low, high)` | Inclusive integer in the requested range. |
+|  | `randomfraction()` | Exact number from 0 inclusive to 1 exclusive. |
+| `timethink` | `currenttime()` | Local-time `recordthink` with `year` through `second`. |
+|  | `timecount()` | Whole Unix epoch seconds. |
+| `paththink` | `joinpath`, `filename`, `extension`, `parentpath` | Safe relative-path construction and inspection. |
+|  | `pathexists(path)` | `good` only for an existing regular file. |
+
+`randomnumber` and `setseed` require integer `numberthink` values. Path values
+must use `/`; absolute paths, `..`, and backslashes raise `FILECRIME`. Path
+results are checked against the same censorship policy as other generated text.
 
 Newcode 0.2 retains the four basic types and adds:
 
@@ -221,8 +250,7 @@ NewCode/
 │   │   ├── v0.1/                 # 0.1 regression examples
 │   │   ├── v0.2/                 # 0.2 examples, beginners, and errors
 │   │   ├── v0.3/                 # 0.3 string and nested-record examples
-│   │   ├── v0.1/                 # 0.1 regression examples and grammar docs
-│   │   └── v0.2/                 # 0.2 module and test examples
+│   │   └── v0.4/                 # 0.4 standard-library examples
 │   └── newcode/
 │       ├── cli.py                # Argument parsing and command orchestration
 │       ├── lexer.py              # Tokens, literals, comments, lexeme checks
@@ -230,6 +258,8 @@ NewCode/
 │       ├── model.py              # AST/token data classes and decimal parsing
 │       ├── validator.py          # Static checks and type analysis
 │       ├── runtime.py            # Interpreter and formatted output
+│       ├── standard.py           # Reserved standard-module registry
+│       ├── paths.py              # Shared safe relative-path rules
 │       ├── censor.py             # Lexicon loading and matching
 │       ├── errors.py             # Source spans and diagnostics
 │       └── __init__.py            # Version and execution limit
@@ -249,7 +279,7 @@ source.think
 
 ## Deliberate limitations
 
-Newcode 0.2 still excludes network access, complex numbers, implicit type
+Newcode 0.4 still excludes network access, complex numbers, implicit type
 conversion, and user-controlled changes to the official lexicon. These
 limitations are part of the experiment:
 they make it possible to observe how a restricted vocabulary changes the shape
@@ -257,8 +287,8 @@ of programs.
 
 ## Development notes
 
-The repository has a small `unittest` regression suite and no packaging
-metadata. Before extending the language, keep the following boundaries in mind:
+The repository has a `unittest` regression suite and Python packaging metadata.
+Before extending the language, keep the following boundaries in mind:
 
 1. Add or change syntax in `lexer.py` and `parser.py`.
 2. Represent new syntax in `model.py`.
