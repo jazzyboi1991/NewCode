@@ -1,5 +1,6 @@
 docs/
 ToDo List.md
+.worktrees/
 
 # Python bytecode and local caches
 __pycache__/
