@@ -4,6 +4,19 @@ Newcode와 Python 참조 구현의 주요 변경 사항을 기록합니다.
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-08-18
+
+### Added
+
+- `othercrime CODE` 실행 오류 handler와 마지막 catch-all을 구현했습니다.
+- 허용 오류 코드·중복 handler·catch-all 순서 진단을 추가했습니다.
+- `WORKLIMIT`은 handler가 포획하지 않고 즉시 전파합니다.
+
+### Compatibility
+
+- 헤더 없는 파일은 Newcode 0.5로 해석하며 `newcode 0.1`~`newcode 0.4`를 계속 지원합니다.
+- 언어 명령어의 별칭·축약형과 반복문 문법은 추가하지 않았습니다.
+
 ## [0.4.0] — 2026-08-16
 
 ### Added

@@ -1,0 +1,10 @@
+// Newcode 0.5: 구체적인 오류 handler와 마지막 catch-all
+newcode 0.5
+
+trythink
+    speak 1 divide 0
+othercrime MATHCRIME
+    speak "calculation blocked"
+othercrime
+    speak "unexpected runtime error"
+endtrythink

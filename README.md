@@ -17,8 +17,8 @@ extension.
 
 ## Current status
 
-The language specification is version **0.4** and the Python package reports
-implementation version **0.4.0**. Rust and browser ports remain future work;
+The language specification is version **0.5** and the Python package reports
+implementation version **0.5.0**. Rust and browser ports remain future work;
 the executable reference implementation is under `Python/`.
 
 `goodthink version`, `run`, `check`, `format`, `inspect`, `policy`, and `test`
@@ -103,8 +103,8 @@ Command summary:
 
 ### Optional header
 
-Newcode 0.4 files may omit the language header. A missing header defaults to
-Newcode 0.4. Explicit `newcode 0.1`, `newcode 0.2`, and `newcode 0.3` headers
+Newcode 0.5 files may omit the language header. A missing header defaults to
+Newcode 0.5. Explicit `newcode 0.1` through `newcode 0.4` headers
 remain supported for legacy programs.
 
 ```newcode
@@ -183,6 +183,23 @@ use paththink from "standard/paththink.think"
 | `timethink` | `currenttime()` | Local-time `recordthink` with `year` through `second`. |
 |  | `timecount()` | Whole Unix epoch seconds. |
 | `paththink` | `joinpath`, `filename`, `extension`, `parentpath` | Safe relative-path construction and inspection. |
+
+### Reliable `trythink` handlers (0.5)
+
+`othercrime CODE` handles one runtime error code. Accepted codes are
+`MATHCRIME`, `INDEXCRIME`, `FILECRIME`, `INPUTCRIME`, `WORDCRIME`, and
+`TESTCRIME`. A code-free `othercrime` is the catch-all and must appear once,
+last. `WORKLIMIT` always propagates and cannot be caught.
+
+```newcode
+trythink
+    speak 1 divide 0
+othercrime MATHCRIME
+    speak "calculation blocked"
+othercrime
+    speak "unexpected runtime error"
+endtrythink
+```
 |  | `pathexists(path)` | `good` only for an existing regular file. |
 
 `randomnumber` and `setseed` require integer `numberthink` values. Path values

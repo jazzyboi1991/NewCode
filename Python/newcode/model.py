@@ -201,6 +201,7 @@ class Try(Stmt):
 
 @dataclass
 class OtherCrime:
+    span: Span
     code: str | None
     body: list
 

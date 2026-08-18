@@ -28,13 +28,13 @@ class Parser:
         # 헤더는 생략할 수 있으며, 생략 시 현재 기본 언어 버전을 사용합니다.
         if self.word("newcode"):
             header = self.take(); version = self.current()
-            if version.kind != "number" or version.value not in ("0.1", "0.2", "0.3", "0.4"):
+            if version.kind != "number" or version.value not in ("0.1", "0.2", "0.3", "0.4", "0.5"):
                 raise fail("THINKLOGIC ERROR", "unsupported language version", header.span)
             self.version = version.value
             self.take()
             self.end_line()
         else:
-            self.version = "0.4"
+            self.version = "0.5"
         statements = []
         while self.current().kind != "eof": statements.append(self.statement()); self.lines()
         return Program(statements)
@@ -80,9 +80,9 @@ class Parser:
         if self.word("trythink"):
             self.take(); self.end_line(); body=self.block({"othercrime","endtrythink"}); handlers=[]
             while self.word("othercrime"):
-                self.take(); code=None
+                handler_span = self.take().span; code=None
                 if self.current().kind=="word": code=self.take().value
-                self.end_line(); handlers.append(OtherCrime(code,self.block({"othercrime","endtrythink"})))
+                self.end_line(); handlers.append(OtherCrime(handler_span,code,self.block({"othercrime","endtrythink"})))
             self.require("endtrythink"); self.end_line(); return Try(span,body,handlers)
         if self.word("writefile") or self.word("appendfile"):
             action=self.take().value; path=self.expr(); self.require("be"); value=self.expr(); self.end_line(); return FileWrite(span,action,path,value)

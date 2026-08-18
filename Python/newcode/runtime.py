@@ -183,10 +183,12 @@ class Runtime:
             try:
                 self._nested(statement.body)
             except NewcodeError as exc:
+                if exc.code == "WORKLIMIT":
+                    raise
                 code = getattr(exc, "code", None)
                 handler = next((h for h in statement.handlers if h.code == code), None)
                 if handler is None:
-                    handler = next((h for h in statement.handlers if h.code in {"othercrime", "OTHERCRIME"}), None)
+                    handler = next((h for h in statement.handlers if h.code is None), None)
                 if handler is None:
                     raise
                 self._nested(handler.body)

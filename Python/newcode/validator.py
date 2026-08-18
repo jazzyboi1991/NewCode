@@ -39,6 +39,16 @@ from newcode.model import (
 )
 
 
+RUNTIME_HANDLER_CODES = frozenset({
+    "MATHCRIME",
+    "INDEXCRIME",
+    "FILECRIME",
+    "INPUTCRIME",
+    "WORDCRIME",
+    "TESTCRIME",
+})
+
+
 def expression_calls(expr):
     if isinstance(expr, Call):
         yield expr.name
@@ -399,7 +409,36 @@ class Validator:
 
         elif isinstance(statement, Try):
             self._nested(statement.body)
-            for handler in statement.handlers: self._nested(handler.body)
+            seen = set()
+            for index, handler in enumerate(statement.handlers):
+                if handler.code is None:
+                    if None in seen:
+                        raise fail(
+                            "THINKLOGIC ERROR",
+                            "only one catch-all othercrime is allowed",
+                            handler.span,
+                        )
+                    if index != len(statement.handlers) - 1:
+                        raise fail(
+                            "THINKLOGIC ERROR",
+                            "catch-all othercrime must be last",
+                            handler.span,
+                        )
+                else:
+                    if handler.code not in RUNTIME_HANDLER_CODES:
+                        raise fail(
+                            "THINKLOGIC ERROR",
+                            f"unknown runtime error code '{handler.code}'",
+                            handler.span,
+                        )
+                    if handler.code in seen:
+                        raise fail(
+                            "THINKLOGIC ERROR",
+                            f"duplicate othercrime handler '{handler.code}'",
+                            handler.span,
+                        )
+                seen.add(handler.code)
+                self._nested(handler.body)
 
         elif isinstance(statement, Speak):
             for value, digits in statement.items:
