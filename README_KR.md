@@ -187,6 +187,9 @@ validator는 자료형 검사, 이름·스코프 검사, 중복 선언 검사, �
 
 ## 검열 정책
 
+전체 정책은 [`Newcode Censorship Policy.md`](Newcode%20Censorship%20Policy.md)에
+정리되어 있습니다.
+
 공식 정책은 [`Python/prohibited_words.json`](Python/prohibited_words.json)에 저장되어 있습니다. 소스 프로그램은 이 파일을 수정할 수 없습니다. 정책은 다음 세 부분으로 구성됩니다.
 
 - `replacement_rules` — 승인된 Newcode 어휘로 바꿔야 하는 oldspeak 표현

@@ -236,6 +236,9 @@ counted steps. Modules expose routines through `call module routine(...)`;
 
 ## Censorship policy
 
+The full policy is documented in
+[`Newcode Censorship Policy.md`](Newcode%20Censorship%20Policy.md).
+
 The official policy is stored in
 [`Python/prohibited_words.json`](Python/prohibited_words.json). Source programs
 cannot modify it. The policy contains:

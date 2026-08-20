@@ -65,17 +65,43 @@ class Censor:
             "".join(ch if ch.isascii() and ch.isalnum() else " " for ch in text),
         ).strip()
 
+    @staticmethod
+    def compact(text: str) -> str:
+        """Return the separator-free form used to reject visual policy bypasses."""
+        table = str.maketrans(
+            {
+                "0": "o",
+                "1": "i",
+                "3": "e",
+                "4": "a",
+                "5": "s",
+                "7": "t",
+                "@": "a",
+                "$": "s",
+            }
+        )
+        return "".join(
+            ch
+            for ch in text.lower().translate(table)
+            if ch.isascii() and ch.isalnum()
+        )
+
     def check(self, text: str, identifier: bool, span: Span) -> None:
         actual = self.normalize(text, identifier)
+        compact_actual = self.compact(text)
 
         def found(value: str) -> bool:
             needle = self.normalize(value, identifier)
 
-            return bool(needle) and (
+            if not needle:
+                return False
+            regular_match = (
                 needle in actual
                 if identifier
                 else bool(re.search(rf"(?<![a-z]){re.escape(needle)}(?![a-z])", actual))
             )
+            compact_needle = self.compact(value)
+            return regular_match or bool(compact_needle and compact_needle in compact_actual)
 
         for phrase in sorted(self.phrases, key=len, reverse=True):
             if found(phrase):
