@@ -76,8 +76,8 @@ def format_source(source):
     if '"""' in source:
         return source if source.endswith("\n") else source + "\n"
     level=0; output=[]
-    opens={"verify","repeatwhile","foreach","routine","trythink","testthink"}
-    closes={"endverify","endrepeat","endforeach","endroutine","endtrythink","endtestthink"}
+    opens={"verify","repeatwhile","foreach","routine","trythink","testthink","recordthink"}
+    closes={"endverify","endrepeat","endforeach","endroutine","endtrythink","endtestthink","endrecordthink"}
     for raw in source.splitlines():
         line=raw.strip()
         if not line: output.append(""); continue

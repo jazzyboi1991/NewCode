@@ -11,7 +11,7 @@ wordthink goodthink silencethink rawthink listthink recordthink indexthink nothi
 plus minus times divide more less same both either un join to good ungood get at field key
 change add remove size slice from foreach in endforeach trythink othercrime endtrythink
 readfile writefile appendfile lines joinlines use call testthink endtestthink
-length find replace split joinwords
+length find replace split joinwords endrecordthink
 """.split()
 )
 TYPE_NAMES = frozenset({"numberthink", "wordthink", "goodthink", "silencethink", "rawthink", "listthink", "recordthink", "indexthink"})

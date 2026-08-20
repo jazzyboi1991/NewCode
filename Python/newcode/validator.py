@@ -26,6 +26,8 @@ from newcode.model import (
     Report,
     Routine,
     Remove,
+    RecordConstruct,
+    RecordType,
     Speak,
     Slice,
     Stop,
@@ -67,6 +69,10 @@ def expression_calls(expr):
         for arg in expr.args:
             yield from expression_calls(arg)
 
+    elif isinstance(expr, RecordConstruct):
+        for _, value in expr.fields:
+            yield from expression_calls(value)
+
 
 def statement_calls(stmt):
     if isinstance(stmt, (Declare, Assign, Report)):
@@ -98,6 +104,11 @@ def statement_calls(stmt):
 class Validator:
     def __init__(self, program):
         self.program, self.routines = program, {}
+        self.record_types = {}
+        self.builtin_types = {
+            "numberthink", "wordthink", "goodthink", "silencethink",
+            "rawthink", "listthink", "recordthink", "indexthink",
+        }
         self.global_scopes, self.local_scopes = [dict()], []
         self.return_type, self.loop_depth = None, 0
 
@@ -120,6 +131,20 @@ class Validator:
                     names.add(name)
 
                 self.routines[statement.name] = statement
+
+        for statement in self.program.statements:
+            if isinstance(statement, RecordType):
+                if statement.name in self.routines or statement.name in self.record_types or statement.name in self.builtin_types:
+                    raise fail("CRIMESTOP", f"duplicate global name '{statement.name}'", statement.span)
+                self.record_types[statement.name] = statement
+
+        for statement in self.record_types.values():
+            fields = set()
+            for field_name, type_name, field_span in statement.fields:
+                if field_name in fields:
+                    raise fail("CRIMESTOP", f"duplicate record field '{field_name}'", field_span)
+                fields.add(field_name)
+                self._require_type(type_name, field_span)
 
         self._reject_recursion()
 
@@ -172,7 +197,9 @@ class Validator:
             0,
         )
 
+        self._require_type(routine.return_type, routine.span)
         for type_name, name, span in routine.params:
+            self._require_type(type_name, span)
             self._declare(type_name, name, span)
 
         returns = self._block(routine.body)
@@ -207,6 +234,7 @@ class Validator:
             any(name in scope for scope in self._scopes())
             or any(name in scope for scope in self.global_scopes)
             or name in self.routines
+            or name in self.record_types
         )
 
         if used:
@@ -217,6 +245,25 @@ class Validator:
     def _type(self, expr):
         if isinstance(expr, LiteralValue):
             return "nothink"
+        if isinstance(expr, RecordConstruct):
+            record = self.record_types.get(expr.type_name)
+            if record is None:
+                raise fail("THINKTYPE ERROR", f"unknown record type '{expr.type_name}'", expr.span)
+            expected = {name: type_name for name, type_name, _ in record.fields}
+            seen = set()
+            for field_name, value in expr.fields:
+                if field_name in seen:
+                    raise fail("THINKLOGIC ERROR", f"duplicate constructor field '{field_name}'", expr.span)
+                if field_name not in expected:
+                    raise fail("THINKLOGIC ERROR", f"unknown constructor field '{field_name}'", expr.span)
+                seen.add(field_name)
+                got = self._type(value)
+                if not self._compatible(expected[field_name], got):
+                    raise fail("THINKTYPE ERROR", f"expected {expected[field_name]}, received {got}", value.span)
+            missing = [name for name in expected if name not in seen]
+            if missing:
+                raise fail("THINKLOGIC ERROR", f"missing constructor field '{missing[0]}'", expr.span)
+            return expr.type_name
         if isinstance(expr, Composite):
             if expr.type_name == "recordthink":
                 fields = set()
@@ -250,6 +297,15 @@ class Validator:
         if isinstance(expr, Slice):
             return "wordthink"
         if isinstance(expr, Get):
+            target_type = self._type(expr.target)
+            if expr.mode == "field" and isinstance(expr.key, Name):
+                record_name = target_type.removeprefix("maybe ")
+                record = self.record_types.get(record_name)
+                if record is not None:
+                    for field_name, field_type, _ in record.fields:
+                        if field_name == expr.key.value:
+                            return field_type
+                    raise fail("INDEXCRIME", f"record field '{expr.key.value}' does not exist", expr.key.span)
             return "nothink"
         if isinstance(expr, Number):
             return "numberthink"
@@ -295,7 +351,7 @@ class Validator:
             for arg, (expected, _, _) in zip(expr.args, routine.params):
                 got = self._type(arg)
 
-                if got != expected:
+                if not self._compatible(expected, got):
                     raise fail(
                         "THINKTYPE ERROR",
                         f"expected {expected}, received {got}",
@@ -336,6 +392,16 @@ class Validator:
             "goodthink" if expr.op in ("more", "less", "both", "either") else expected
         )
 
+    def _require_type(self, type_name, span):
+        base = type_name.removeprefix("maybe ")
+        if base not in self.builtin_types and base not in self.record_types:
+            raise fail("THINKTYPE ERROR", f"unknown type '{base}'", span)
+
+    def _compatible(self, expected, got):
+        if expected == got:
+            return True
+        return expected.startswith("maybe ") and got in ("nothink", expected[6:])
+
     def _nested(self, statements):
         self._scopes().append({})
 
@@ -354,12 +420,13 @@ class Validator:
         return guaranteed
 
     def _statement(self, statement):
-        if isinstance(statement, (ModuleUse, TestThink)): return False
+        if isinstance(statement, (ModuleUse, TestThink, RecordType)): return False
         if isinstance(statement, Declare):
+            self._require_type(statement.type_name, statement.span)
             got = self._type(statement.value)
 
             declared = statement.type_name.removeprefix("maybe ")
-            if got != declared and not (statement.type_name.startswith("maybe ") and got == "nothink"):
+            if not self._compatible(statement.type_name, got):
                 raise fail(
                     "THINKTYPE ERROR",
                     f"expected {statement.type_name}, received {got}",
@@ -383,10 +450,20 @@ class Validator:
 
         elif isinstance(statement, (Change, Add, Remove, FileWrite)):
             if isinstance(statement, Change):
-                self._type(statement.target)
-                if not (statement.mode == "field" and isinstance(statement.key, Name)):
+                target_type = self._type(statement.target)
+                value_type = self._type(statement.value)
+                if statement.mode == "field" and isinstance(statement.key, Name):
+                    record_name = target_type.removeprefix("maybe ")
+                    record = self.record_types.get(record_name)
+                    if record is not None:
+                        field_types = {name: field_type for name, field_type, _ in record.fields}
+                        if statement.key.value not in field_types:
+                            raise fail("INDEXCRIME", f"record field '{statement.key.value}' does not exist", statement.key.span)
+                        expected = field_types[statement.key.value]
+                        if not self._compatible(expected, value_type):
+                            raise fail("THINKTYPE ERROR", f"expected {expected}, received {value_type}", statement.value.span)
+                else:
                     self._type(statement.key)
-                self._type(statement.value)
             elif isinstance(statement, Add):
                 self._type(statement.value)
                 if self._type(statement.target) != "listthink":

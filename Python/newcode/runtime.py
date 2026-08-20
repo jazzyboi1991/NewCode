@@ -48,6 +48,8 @@ class Runtime:
         if isinstance(expr,Good): return expr.value
         if isinstance(expr,LiteralValue): return expr.value
         if isinstance(expr,Name): return self._lookup(expr.value,expr.span).value
+        if isinstance(expr,RecordConstruct):
+            return {name: self._value(value) for name, value in expr.fields}
         if isinstance(expr,Input): return self._input(expr)
         if isinstance(expr,Composite):
             if expr.type_name=="listthink": return [self._value(x) for x in expr.items]
@@ -123,7 +125,7 @@ class Runtime:
         for statement in statements: self._statement(statement)
     def _statement(self, statement):
         self._tick(statement.span)
-        if isinstance(statement,(ModuleUse,TestThink)): pass
+        if isinstance(statement,(ModuleUse,TestThink,RecordType)): pass
         elif isinstance(statement,Declare): self._scopes()[-1][statement.name]=Variable(statement.type_name,self._value(statement.value))
         elif isinstance(statement,Assign): self._lookup(statement.name,statement.span).value=self._value(statement.value)
         elif isinstance(statement,Speak):

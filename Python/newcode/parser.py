@@ -7,7 +7,9 @@ class Parser:
     PRECEDENCE = {"either": 1, "both": 2, "more": 3, "less": 3, "same": 3,
                   "join": 4, "plus": 5, "minus": 5, "times": 6, "divide": 6}
 
-    def __init__(self, tokens): self.tokens, self.index = tokens, 0
+    def __init__(self, tokens):
+        self.tokens, self.index = tokens, 0
+        self.user_types = set()
     def current(self): return self.tokens[self.index]
     def word(self, value): return self.current().kind == "word" and self.current().value == value
     def take(self): token = self.current(); self.index += 1; return token
@@ -28,22 +30,24 @@ class Parser:
         # 헤더는 생략할 수 있으며, 생략 시 현재 기본 언어 버전을 사용합니다.
         if self.word("newcode"):
             header = self.take(); version = self.current()
-            if version.kind != "number" or version.value not in ("0.1", "0.2", "0.3", "0.4", "0.5"):
+            if version.kind != "number" or version.value not in ("0.1", "0.2", "0.3", "0.4", "0.5", "0.6"):
                 raise fail("THINKLOGIC ERROR", "unsupported language version", header.span)
             self.version = version.value
             self.take()
             self.end_line()
         else:
-            self.version = "0.5"
+            self.version = "0.6"
         statements = []
         while self.current().kind != "eof": statements.append(self.statement()); self.lines()
         return Program(statements)
     def statement(self):
         token, span = self.current(), self.current().span
+        if self.word("recordthink"):
+            return self.record_type(span)
         if self.word("thought"):
             self.take(); maybe = False
             if self.word("maybe"): maybe = True; self.take()
-            if self.current().value in TYPE_NAMES:
+            if self._is_type_declaration():
                 type_name = self.take().value
                 name = self.identifier(); self.require("be"); value = self.expr(); self.end_line()
                 return Declare(span, ("maybe " if maybe else "") + type_name, name.value, value)
@@ -110,10 +114,44 @@ class Parser:
             if self.current().kind!=",": break
             self.take(); self.lines()
         self.require(")"); self.end_line(); body=self.block({"endroutine"}); self.require("endroutine"); self.end_line(); return Routine(span,return_type,name.value,params,body)
+
+    def _is_type_declaration(self):
+        token = self.current()
+        if token.kind != "word":
+            return False
+        if token.value in TYPE_NAMES or token.value in self.user_types:
+            return True
+        return self.index + 2 < len(self.tokens) and self.tokens[self.index + 1].kind == "word" and self.tokens[self.index + 2].value == "be"
+
+    def record_type(self, span):
+        self.take()
+        name = self.identifier()
+        self.end_line()
+        fields = []
+        self.lines()
+        while not self.word("endrecordthink"):
+            field_span = self.current().span
+            self.require("thought")
+            maybe = False
+            if self.word("maybe"):
+                maybe = True
+                self.take()
+            field_type = self.take()
+            if field_type.kind != "word":
+                raise fail("THINKLOGIC ERROR", "expected a field type", field_type.span)
+            field_name = self.identifier()
+            self.end_line()
+            fields.append((field_name.value, ("maybe " if maybe else "") + field_type.value, field_span))
+        self.take()
+        self.end_line()
+        self.user_types.add(name.value)
+        return RecordType(span, name.value, fields)
+
     def block(self,endings):
         result=[]; self.lines()
         while self.current().kind!="eof" and self.current().value not in endings:
             if self.word("routine"): raise fail("THINKLOGIC ERROR","routines are only allowed at top level",self.current().span)
+            if self.word("recordthink"): raise fail("THINKLOGIC ERROR","recordthink declarations are only allowed at top level",self.current().span)
             result.append(self.statement()); self.lines()
         if self.current().kind=="eof": raise fail("THINKLOGIC ERROR","unclosed block",self.current().span)
         return result
@@ -167,6 +205,17 @@ class Parser:
                 if self.current().kind!=",": break
                 self.take(); self.lines()
             self.require(")"); return Composite(token.span,token.value,items)
+        if token.kind=="word" and token.value in self.user_types and self.current().kind=="(":
+            self.take(); fields=[]; self.lines()
+            while self.current().kind != ")":
+                field = self.identifier()
+                self.require("be")
+                fields.append((field.value, self.expr()))
+                self.lines()
+                if self.current().kind != ",": break
+                self.take(); self.lines()
+            self.require(")")
+            return RecordConstruct(token.span, token.value, fields)
         if token.kind=="word" and token.value not in KEYWORDS:
             if self.current().kind!="(": return Name(token.span,token.value)
             self.take(); self.lines(); args=[]

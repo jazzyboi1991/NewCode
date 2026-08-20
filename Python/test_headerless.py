@@ -19,7 +19,7 @@ class HeaderlessProgramTests(unittest.TestCase):
         censor = Censor(ROOT / "prohibited_words.json")
         parser = Parser(Lexer(source, censor).scan())
         program = parser.parse()
-        self.assertEqual(parser.version, "0.5")
+        self.assertEqual(parser.version, "0.6")
         routines = Validator(program).validate()
         output = io.StringIO()
         with redirect_stdout(output):

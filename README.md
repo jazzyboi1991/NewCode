@@ -17,14 +17,15 @@ extension.
 
 ## Current status
 
-The language specification is version **0.5** and the Python package reports
-implementation version **0.5.0**. Rust and browser ports remain future work;
+The language specification is version **0.6** and the Python package reports
+implementation version **0.6.0**. Rust and browser ports remain future work;
 the executable reference implementation is under `Python/`.
 
 `goodthink version`, `run`, `check`, `format`, `inspect`, `policy`, and `test`
 are available. 0.1 compatibility remains covered by the regression suite.
 
-Version 0.4 adds reserved standard modules for deterministic random values,
+Version 0.6 adds named `recordthink` types with required named fields. Version
+0.4 adds reserved standard modules for deterministic random values,
 local time, and safe relative paths. See [`CHANGELOG.md`](CHANGELOG.md) for the
 version history.
 
@@ -103,8 +104,8 @@ Command summary:
 
 ### Optional header
 
-Newcode 0.5 files may omit the language header. A missing header defaults to
-Newcode 0.5. Explicit `newcode 0.1` through `newcode 0.4` headers
+Newcode 0.6 files may omit the language header. A missing header defaults to
+Newcode 0.6. Explicit `newcode 0.1` through `newcode 0.5` headers
 remain supported for legacy programs.
 
 ```newcode
@@ -200,6 +201,26 @@ othercrime
     speak "unexpected runtime error"
 endtrythink
 ```
+
+### User-defined `recordthink` types (0.6)
+
+Declare named record types at the top level. Every field is required and
+constructors use named `be` arguments, so field order does not matter.
+
+```newcode
+recordthink Person
+    thought wordthink name
+    thought numberthink age
+endrecordthink
+
+thought Person user be Person(age be 30, name be "Ada")
+speak get user field name
+change user field age be 31
+```
+
+User-defined records may be nested in records and lists and may be used with
+`maybe`. Missing or unknown constructor fields are `THINKLOGIC ERROR`, field
+type mismatches are `THINKTYPE ERROR`, and missing field access is `INDEXCRIME`.
 |  | `pathexists(path)` | `good` only for an existing regular file. |
 
 `randomnumber` and `setseed` require integer `numberthink` values. Path values
@@ -270,7 +291,9 @@ NewCode/
 │   │   ├── v0.1/                 # 0.1 regression examples
 │   │   ├── v0.2/                 # 0.2 examples, beginners, and errors
 │   │   ├── v0.3/                 # 0.3 string and nested-record examples
-│   │   └── v0.4/                 # 0.4 standard-library examples
+│   │   ├── v0.4/                 # 0.4 standard-library examples
+│   │   ├── v0.5/                 # 0.5 exception-handler examples
+│   │   └── v0.6/                 # 0.6 user-defined recordthink examples
 │   └── newcode/
 │       ├── cli.py                # Argument parsing and command orchestration
 │       ├── lexer.py              # Tokens, literals, comments, lexeme checks
@@ -299,8 +322,9 @@ source.think
 
 ## Deliberate limitations
 
-Newcode 0.4 still excludes network access, complex numbers, implicit type
-conversion, and user-controlled changes to the official lexicon. These
+Newcode 0.6 still excludes network access, command-line argument variables,
+environment settings, complex numbers, implicit type conversion, and
+user-controlled changes to the official lexicon. These
 limitations are part of the experiment:
 they make it possible to observe how a restricted vocabulary changes the shape
 of programs.

@@ -1,0 +1,23 @@
+// Newcode 0.6: 사용자 정의 recordthink와 이름 있는 생성자
+newcode 0.6
+
+recordthink Address
+    thought wordthink city
+endrecordthink
+
+recordthink Person
+    thought wordthink name
+    thought Address address
+    thought maybe numberthink score
+endrecordthink
+
+thought Person user be Person(
+    name be "Ada",
+    address be Address(city be "Seoul"),
+    score be nothink
+)
+
+speak get user field name
+speak get get user field address field city
+change user field score be 100
+speak get user field score

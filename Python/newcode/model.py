@@ -166,6 +166,18 @@ class Composite(Expr):
 
 
 @dataclass
+class RecordConstruct(Expr):
+    type_name: str
+    fields: list[tuple[str, Expr]]
+
+
+@dataclass
+class RecordType(Stmt):
+    name: str
+    fields: list[tuple[str, str, Span]]
+
+
+@dataclass
 class Change(Stmt):
     target: Expr
     mode: str
