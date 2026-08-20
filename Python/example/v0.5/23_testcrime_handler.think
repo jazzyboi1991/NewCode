@@ -1,0 +1,10 @@
+// testthink에서 파일 쓰기는 TESTCRIME이지만 handler로 처리할 수 있습니다.
+newcode 0.5
+
+testthink "testcrime handler"
+    trythink
+        writefile "blocked-in-test.txt" be "not written"
+    othercrime TESTCRIME
+        speak "test file write blocked"
+    endtrythink
+endtestthink

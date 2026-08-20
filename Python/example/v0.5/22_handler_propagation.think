@@ -1,0 +1,15 @@
+// 안쪽 handler에서 발생한 오류는 같은 trythink의 다른 handler로 가지 않습니다.
+// 바깥 trythink가 그 오류를 처리합니다.
+newcode 0.5
+
+trythink
+    trythink
+        speak 1 divide 0
+    othercrime MATHCRIME
+        speak 1 divide 0
+    othercrime
+        speak "inner catch-all"
+    endtrythink
+othercrime MATHCRIME
+    speak "outer handler received the propagated error"
+endtrythink

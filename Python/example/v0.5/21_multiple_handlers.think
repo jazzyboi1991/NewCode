@@ -1,0 +1,21 @@
+// 여러 trythink에서 서로 다른 실행 오류를 구체적으로 처리합니다.
+newcode 0.5
+
+trythink
+    speak 1 divide 0
+othercrime MATHCRIME
+    speak "math handled"
+endtrythink
+
+thought listthink values be listthink(1, 2)
+trythink
+    speak get values at 2
+othercrime INDEXCRIME
+    speak "index handled"
+endtrythink
+
+trythink
+    speak readfile "missing-v05-file.txt"
+othercrime FILECRIME
+    speak "file handled"
+endtrythink
