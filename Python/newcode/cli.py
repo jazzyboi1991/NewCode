@@ -13,6 +13,10 @@ from .model import Call, ModuleUse, NativeRoutine, Routine, TestThink, Program
 from .standard import STANDARD_PREFIX, standard_module
 
 
+def official_censor():
+    return Censor.official()
+
+
 def _prefix_call_names(value, module):
     if isinstance(value, list) or isinstance(value, tuple):
         for item in value:
@@ -91,6 +95,11 @@ def format_source(source):
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
+    program_args = []
+    if "--" in argv:
+        separator = argv.index("--")
+        program_args = argv[separator + 1:]
+        argv = argv[:separator]
     # CLI 단축형은 언어 문법과 분리된 명령행 편의 기능입니다.
     if argv and (argv[0].endswith(".think") or Path(argv[0]).exists()):
         argv = ["run", *argv]
@@ -107,8 +116,11 @@ def main(argv=None):
     ap.add_argument("rest", nargs="*"); ap.add_argument("--write",action="store_true"); ap.add_argument("--trace",action="store_true"); ap.add_argument("--tokens",action="store_true"); ap.add_argument("--ast",action="store_true")
     args=ap.parse_args(argv)
     if args.command=="version": print(f"goodthink {VERSION} (Newcode {LANGUAGE_VERSION})"); return 0
+    if program_args and args.command != "run":
+        print("THINKLOGIC ERROR: program arguments are supported only with run", file=sys.stderr)
+        return 2
     if args.command=="policy":
-        censor=Censor(Path(__file__).parent.parent/"prohibited_words.json")
+        censor=official_censor()
         try: censor.check(" ".join(args.rest[1:]) if args.rest and args.rest[0]=="check" else " ".join(args.rest),False,__import__('newcode.errors',fromlist=['Span']).Span(1,1)); print("GOODTHINK: text approved."); return 0
         except NewcodeError as exc: print(f"{exc.code}: {exc.message}"); return 1
     if not args.rest: print("THINKLOGIC ERROR: source file is required",file=sys.stderr); return 2
@@ -116,7 +128,7 @@ def main(argv=None):
     try: source=path.read_text(encoding="utf-8")
     except OSError as exc: print(str(exc),file=sys.stderr); return 2
     try:
-        censor=Censor(Path(__file__).parent.parent/"prohibited_words.json")
+        censor=official_censor()
         program=Parser(Lexer(source,censor).scan()).parse()
         imported=[]
         for statement in program.statements:
@@ -138,9 +150,9 @@ def main(argv=None):
             print("GOODTHINK: program approved."); return 0
         if args.command=="test":
             tests=[x for x in program.statements if isinstance(x,TestThink)]
-            for test in tests: Runtime(censor,routines,cwd=path.parent,test_mode=True).execute(Program(test.body))
+            for test in tests: Runtime(censor,routines,cwd=path.parent,test_mode=True,argv=[]).execute(Program(test.body))
             print(f"GOODTHINK: {len(tests)} tests approved."); return 0
-        Runtime(censor,routines,cwd=path.parent).execute(program)
+        Runtime(censor,routines,cwd=path.parent,argv=program_args).execute(program)
     except (NewcodeError,OSError) as exc:
         print(exc.display(str(path),source) if isinstance(exc,NewcodeError) else str(exc),file=sys.stderr); return 1
     print("GOODTHINK: program approved and completed."); return 0

@@ -20,9 +20,10 @@ class ReturnFlow(Exception):
     def __init__(self, value): self.value=value
 
 class Runtime:
-    def __init__(self, censor, routines, cwd=None, test_mode=False, now_provider=None, time_provider=None):
+    def __init__(self, censor, routines, cwd=None, test_mode=False, now_provider=None, time_provider=None, argv=None):
         self.censor,self.routines,self.cwd=censor,routines,Path(cwd or Path.cwd())
         self.test_mode = test_mode
+        self.command_args = [] if test_mode else list(argv or [])
         self.random_generator = random.Random()
         self.now_provider = now_provider or (lambda: datetime.now().astimezone())
         self.time_provider = time_provider or time.time

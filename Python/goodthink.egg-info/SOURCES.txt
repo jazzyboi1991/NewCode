@@ -12,8 +12,9 @@ newcode/cli.py
 newcode/errors.py
 newcode/lexer.py
 newcode/model.py
-newcode/paths.py
 newcode/parser.py
+newcode/paths.py
+newcode/prohibited_words.json
 newcode/runtime.py
 newcode/standard.py
 newcode/validator.py

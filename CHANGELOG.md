@@ -4,6 +4,20 @@ Newcode와 Python 참조 구현의 주요 변경 사항을 기록합니다.
 
 ## [Unreleased]
 
+## [0.7.0] — 2026-08-25
+
+### Added
+
+- `standard/commandthink.think`의 `arguments()`와 `argument(index)`를 추가했습니다.
+- `goodthink run file.think -- ...` 및 파일명 단축형의 프로그램 인자 전달을 지원합니다.
+- 공식 검열 lexicon을 설치 패키지 리소스로 포함하고 wheel·sdist 검증을 추가했습니다.
+- Python 3.11~3.14 GitHub Actions 회귀 검증을 추가했습니다.
+
+### Compatibility
+
+- 헤더 없는 프로그램은 Newcode 0.7로 해석하며 `newcode 0.1`~`newcode 0.6`을 계속 지원합니다.
+- 언어 명령어 별칭·축약형, 설정 파일, 추적 기능은 추가하지 않았습니다.
+
 ## [0.6.0] — 2026-08-20
 
 ### Added

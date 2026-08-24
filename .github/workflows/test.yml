@@ -1,0 +1,45 @@
+name: Newcode tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package and build tools
+        run: python -m pip install -e ./NewCode/Python build
+      - name: Run tests
+        working-directory: NewCode/Python
+        run: python -m unittest discover -v
+      - name: Check Python syntax
+        run: python -m compileall -q NewCode/Python
+      - name: Check examples
+        working-directory: NewCode/Python
+        run: python - <<'PY'
+          import subprocess
+          from pathlib import Path
+          for path in sorted(Path("example").rglob("*.think")):
+              if "Errors" in path.parts:
+                  continue
+              subprocess.run(["python", "-m", "newcode.cli", "check", str(path)], check=True)
+          PY
+      - name: Build wheel and source archive
+        run: python -m build --wheel --sdist NewCode/Python
+      - name: Verify lexicon in wheel
+        run: python - <<'PY'
+          import zipfile
+          from pathlib import Path
+          wheel = next(Path("NewCode/Python/dist").glob("*.whl"))
+          with zipfile.ZipFile(wheel) as archive:
+              assert "newcode/prohibited_words.json" in archive.namelist()
+          print("official lexicon packaged")
+          PY

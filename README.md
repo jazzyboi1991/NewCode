@@ -17,14 +17,15 @@ extension.
 
 ## Current status
 
-The language specification is version **0.6** and the Python package reports
-implementation version **0.6.0**. Rust and browser ports remain future work;
+The language specification is version **0.7** and the Python package reports
+implementation version **0.7.0**. Rust and browser ports remain future work;
 the executable reference implementation is under `Python/`.
 
 `goodthink version`, `run`, `check`, `format`, `inspect`, `policy`, and `test`
 are available. 0.1 compatibility remains covered by the regression suite.
 
-Version 0.6 adds named `recordthink` types with required named fields. Version
+Version 0.7 adds the `commandthink` standard module and installable package
+resources. Version 0.6 adds named `recordthink` types with required named fields. Version
 0.4 adds reserved standard modules for deterministic random values,
 local time, and safe relative paths. See [`CHANGELOG.md`](CHANGELOG.md) for the
 version history.
@@ -86,6 +87,13 @@ goodthink --ast program.think
 goodthink --policy "text"
 ```
 
+Pass program arguments after `--`. The first argument has index `0`:
+
+```text
+goodthink run program.think -- first second
+goodthink program.think -- first second
+```
+
 `check` lexes, parses, and statically validates a program without executing
 it. `run` performs the same validation and then interprets the program.
 Programs must have the `.think` suffix. Errors include a diagnostic code and,
@@ -104,8 +112,8 @@ Command summary:
 
 ### Optional header
 
-Newcode 0.6 files may omit the language header. A missing header defaults to
-Newcode 0.6. Explicit `newcode 0.1` through `newcode 0.5` headers
+Newcode 0.7 files may omit the language header. A missing header defaults to
+Newcode 0.7. Explicit `newcode 0.1` through `newcode 0.6` headers
 remain supported for legacy programs.
 
 ```newcode
@@ -202,6 +210,18 @@ othercrime
 endtrythink
 ```
 
+### Command-line arguments (0.7)
+
+```newcode
+use commandthink from "standard/commandthink.think"
+speak call commandthink argument(0)
+```
+
+`arguments()` returns all values after the CLI `--` separator as a `listthink`.
+`argument(index)` returns one `wordthink` using zero-based indexing. Missing
+positions produce `INPUTCRIME`; command-line values are checked by the official
+censorship policy.
+
 ### User-defined `recordthink` types (0.6)
 
 Declare named record types at the top level. Every field is required and
@@ -293,7 +313,8 @@ NewCode/
 │   │   ├── v0.3/                 # 0.3 string and nested-record examples
 │   │   ├── v0.4/                 # 0.4 standard-library examples
 │   │   ├── v0.5/                 # 0.5 exception-handler examples
-│   │   └── v0.6/                 # 0.6 user-defined recordthink examples
+│   │   ├── v0.6/                 # 0.6 user-defined recordthink examples
+│   │   └── v0.7/                 # 0.7 commandthink examples
 │   └── newcode/
 │       ├── cli.py                # Argument parsing and command orchestration
 │       ├── lexer.py              # Tokens, literals, comments, lexeme checks
@@ -322,8 +343,8 @@ source.think
 
 ## Deliberate limitations
 
-Newcode 0.6 still excludes network access, command-line argument variables,
-environment settings, complex numbers, implicit type conversion, and
+Newcode 0.7 still excludes network access, environment settings, complex
+numbers, implicit type conversion, and
 user-controlled changes to the official lexicon. These
 limitations are part of the experiment:
 they make it possible to observe how a restricted vocabulary changes the shape

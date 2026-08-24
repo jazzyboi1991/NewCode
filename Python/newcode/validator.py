@@ -358,6 +358,11 @@ class Validator:
                         arg.span,
                     )
 
+            if isinstance(routine, NativeRoutine) and expr.name.endswith(".argument"):
+                value = expr.args[0]
+                if isinstance(value, Number) and value.value.denominator != 1:
+                    raise fail("THINKLOGIC ERROR", "argument index must be an integer", value.span)
+
             return routine.return_type
 
         left, right = self._type(expr.left), self._type(expr.right)

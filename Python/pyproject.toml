@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "goodthink"
-version = "0.6.0"
+version = "0.7.0"
 description = "Python reference interpreter for the Newcode language"
 requires-python = ">=3.11"
 
@@ -13,3 +13,6 @@ goodthink = "newcode.cli:main"
 
 [tool.setuptools]
 packages = ["newcode", "goodthink"]
+
+[tool.setuptools.package-data]
+newcode = ["prohibited_words.json"]

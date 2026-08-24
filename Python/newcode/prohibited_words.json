@@ -1,0 +1,740 @@
+{
+    "schema_version": "1.1",
+    "language_version": "0.1",
+    "purpose": "Official Newcode censorship lexicon. Source programs cannot modify this file.",
+    "normalization": {
+        "case_sensitive": false,
+        "collapse_whitespace": true,
+        "remove_separators": ["-", "_", ".", " ", "\t", "\n"],
+        "leet_substitutions": {
+            "0": "o",
+            "1": "i",
+            "3": "e",
+            "4": "a",
+            "5": "s",
+            "7": "t",
+            "@": "a",
+            "$": "s"
+        }
+    },
+    "matching": {
+        "text_and_input": "whole_word_or_phrase",
+        "identifiers": "normalized_substring",
+        "recheck_after_join": true
+    },
+    "morphology_rules": {
+        "purpose": "Permit a small, regular Newspeak vocabulary instead of a large family of near-synonyms.",
+        "prefixes": [
+            {
+                "prefix": "un",
+                "allowed_bases": ["good", "goodthink", "goodparty"],
+                "meaning": "approved negation",
+                "examples": ["ungood", "ungoodthink", "ungoodparty"]
+            },
+            {
+                "prefix": "plus",
+                "allowed_bases": ["good", "ungood", "goodthink", "goodparty"],
+                "meaning": "approved intensifier",
+                "examples": ["plusgood", "plusungood", "plusgoodthink", "plusgoodparty"]
+            },
+            {
+                "prefix": "doubleplus",
+                "allowed_bases": ["good", "ungood", "goodthink", "goodparty"],
+                "meaning": "maximum approved intensifier",
+                "examples": ["doubleplusgood", "doubleplusungood", "doubleplusgoodthink", "doubleplusgoodparty"]
+            },
+            {
+                "prefix": "old",
+                "allowed_bases": ["think", "speak"],
+                "meaning": "obsolete or ideologically suspect form",
+                "examples": ["oldthink", "oldspeak"]
+            }
+        ],
+        "compounds": [
+            {
+                "root": "think",
+                "allowed_qualifiers": ["good", "ungood", "plusgood", "doubleplusgood", "old"],
+                "meaning": "quality of thought"
+            },
+            {
+                "root": "party",
+                "allowed_qualifiers": ["good", "ungood", "plusgood", "doubleplusgood"],
+                "meaning": "degree of Party alignment"
+            },
+            {
+                "root": "life",
+                "fixed_forms": ["ownlife"],
+                "meaning": "a denunciatory label for private individuality"
+            },
+            {
+                "root": "speak",
+                "fixed_forms": ["oldspeak", "duckspeak"],
+                "meaning": "obsolete or unreflective speech"
+            }
+        ],
+        "inflections": {
+            "allowed": ["plural_s", "past_ed", "present_participle_ing", "agent_er"],
+            "policy": "Apply only to approved roots and approved compound forms. Irregular forms require an explicit replacement rule."
+        },
+        "function_word_reductions": [
+            {
+                "terms": ["although", "however", "nevertheless", "despite"],
+                "replacement": "but",
+                "purpose": "remove elaborate concession and contrast"
+            },
+            {
+                "terms": ["therefore", "consequently", "thus"],
+                "replacement": "so",
+                "purpose": "compress causal explanation"
+            },
+            {
+                "terms": ["moreover", "furthermore", "additionally"],
+                "replacement": "and",
+                "purpose": "compress elaboration"
+            },
+            {
+                "terms": ["perhaps", "possibly", "maybe"],
+                "replacement": "ungoodthink",
+                "purpose": "deny hedging and unapproved uncertainty"
+            }
+        ],
+        "prohibited_productivity": [
+            "Do not invent a new abstract noun merely by adding -ness, -ity, -tion, -ism, or -ship.",
+            "Do not create a new antonym with a prefix other than un-.",
+            "Do not create a new intensifier with a prefix other than plus- or doubleplus-."
+        ]
+    },
+    "replacement_rules": [
+        {
+            "term": "happy",
+            "replacement": "good",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "glad",
+            "replacement": "good",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "cheerful",
+            "replacement": "good",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "joyful",
+            "replacement": "good",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "delighted",
+            "replacement": "good",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "content",
+            "replacement": "good",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "pleased",
+            "replacement": "good",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "satisfied",
+            "replacement": "good",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "grateful",
+            "replacement": "good",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "calm",
+            "replacement": "good",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "bad",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "sad",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "unhappy",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "miserable",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "gloomy",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "sorrowful",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "depressed",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "upset",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "angry",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "afraid",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "anxious",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "lonely",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "tired",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "ugly",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "dirty",
+            "replacement": "ungood",
+            "category": "oldspeak_emotion"
+        },
+        {
+            "term": "great",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "excellent",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "superb",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "amazing",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "brilliant",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "impressive",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "remarkable",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "awesome",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "splendid",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "beautiful",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "pretty",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "perfect",
+            "replacement": "doubleplusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "wonderful",
+            "replacement": "doubleplusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "fantastic",
+            "replacement": "doubleplusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "magnificent",
+            "replacement": "doubleplusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "extraordinary",
+            "replacement": "doubleplusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "ideal",
+            "replacement": "doubleplusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "terrible",
+            "replacement": "doubleplusungood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "awful",
+            "replacement": "doubleplusungood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "horrible",
+            "replacement": "doubleplusungood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "dreadful",
+            "replacement": "doubleplusungood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "abysmal",
+            "replacement": "doubleplusungood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "disastrous",
+            "replacement": "doubleplusungood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "disgusting",
+            "replacement": "doubleplusungood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "term": "clever",
+            "replacement": "plusgoodthink",
+            "category": "oldspeak_thought"
+        },
+        {
+            "term": "intelligent",
+            "replacement": "plusgoodthink",
+            "category": "oldspeak_thought"
+        },
+        {
+            "term": "smart",
+            "replacement": "plusgoodthink",
+            "category": "oldspeak_thought"
+        },
+        {
+            "term": "wise",
+            "replacement": "plusgoodthink",
+            "category": "oldspeak_thought"
+        },
+        {
+            "term": "stupid",
+            "replacement": "ungoodthink",
+            "category": "oldspeak_thought"
+        },
+        {
+            "term": "foolish",
+            "replacement": "ungoodthink",
+            "category": "oldspeak_thought"
+        },
+        {
+            "term": "ignorant",
+            "replacement": "ungoodthink",
+            "category": "oldspeak_thought"
+        },
+        {
+            "term": "confused",
+            "replacement": "ungoodthink",
+            "category": "oldspeak_thought"
+        },
+        {
+            "term": "individual",
+            "replacement": "ownlife",
+            "category": "oldspeak_individualism"
+        },
+        {
+            "term": "individualism",
+            "replacement": "ownlife",
+            "category": "oldspeak_individualism"
+        },
+        {
+            "term": "independent",
+            "replacement": "ownlife",
+            "category": "oldspeak_individualism"
+        },
+        {
+            "term": "independence",
+            "replacement": "ownlife",
+            "category": "oldspeak_individualism"
+        },
+        {
+            "term": "privacy",
+            "replacement": "ownlife",
+            "category": "oldspeak_individualism"
+        },
+        {
+            "term": "personal",
+            "replacement": "ownlife",
+            "category": "oldspeak_individualism"
+        },
+        {
+            "term": "doubt",
+            "replacement": "oldthink",
+            "category": "oldspeak_thoughtcrime"
+        },
+        {
+            "term": "skeptical",
+            "replacement": "oldthink",
+            "category": "oldspeak_thoughtcrime"
+        },
+        {
+            "term": "skepticism",
+            "replacement": "oldthink",
+            "category": "oldspeak_thoughtcrime"
+        },
+        {
+            "term": "criticize",
+            "replacement": "oldthink",
+            "category": "oldspeak_thoughtcrime"
+        },
+        {
+            "term": "criticism",
+            "replacement": "oldthink",
+            "category": "oldspeak_thoughtcrime"
+        },
+        {
+            "term": "question",
+            "replacement": "oldthink",
+            "category": "oldspeak_thoughtcrime"
+        },
+        { "term": "pleasant", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "enjoyable", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "favorable", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "fine", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "okay", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "acceptable", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "convenient", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "useful", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "important", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "necessary", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "healthy", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "safe", "replacement": "good", "category": "oldspeak_evaluation" },
+        { "term": "kind", "replacement": "good", "category": "oldspeak_character" },
+        { "term": "friendly", "replacement": "good", "category": "oldspeak_character" },
+        { "term": "generous", "replacement": "good", "category": "oldspeak_character" },
+        { "term": "patient", "replacement": "good", "category": "oldspeak_character" },
+        { "term": "honest", "replacement": "goodthink", "category": "oldspeak_character" },
+        { "term": "truthful", "replacement": "goodthink", "category": "oldspeak_character" },
+        { "term": "loyal", "replacement": "goodparty", "category": "oldspeak_loyalty" },
+        { "term": "obedient", "replacement": "goodparty", "category": "oldspeak_loyalty" },
+        { "term": "compliant", "replacement": "goodparty", "category": "oldspeak_loyalty" },
+        { "term": "faithful", "replacement": "goodparty", "category": "oldspeak_loyalty" },
+        { "term": "nice", "replacement": "plusgood", "category": "oldspeak_intensity" },
+        { "term": "cool", "replacement": "plusgood", "category": "oldspeak_intensity" },
+        { "term": "terrific", "replacement": "plusgood", "category": "oldspeak_intensity" },
+        { "term": "fabulous", "replacement": "plusgood", "category": "oldspeak_intensity" },
+        { "term": "marvelous", "replacement": "plusgood", "category": "oldspeak_intensity" },
+        { "term": "outstanding", "replacement": "plusgood", "category": "oldspeak_intensity" },
+        { "term": "exceptional", "replacement": "plusgood", "category": "oldspeak_intensity" },
+        { "term": "superior", "replacement": "plusgood", "category": "oldspeak_intensity" },
+        { "term": "incredible", "replacement": "plusgood", "category": "oldspeak_intensity" },
+        { "term": "ultimate", "replacement": "doubleplusgood", "category": "oldspeak_intensity" },
+        { "term": "flawless", "replacement": "doubleplusgood", "category": "oldspeak_intensity" },
+        { "term": "unmatched", "replacement": "doubleplusgood", "category": "oldspeak_intensity" },
+        { "term": "unpleasant", "replacement": "ungood", "category": "oldspeak_evaluation" },
+        { "term": "uncomfortable", "replacement": "ungood", "category": "oldspeak_evaluation" },
+        { "term": "unfavorable", "replacement": "ungood", "category": "oldspeak_evaluation" },
+        { "term": "poor", "replacement": "ungood", "category": "oldspeak_evaluation" },
+        { "term": "wrong", "replacement": "ungood", "category": "oldspeak_evaluation" },
+        { "term": "flawed", "replacement": "ungood", "category": "oldspeak_evaluation" },
+        { "term": "weak", "replacement": "ungood", "category": "oldspeak_evaluation" },
+        { "term": "harmful", "replacement": "ungood", "category": "oldspeak_evaluation" },
+        { "term": "unsafe", "replacement": "ungood", "category": "oldspeak_evaluation" },
+        { "term": "sick", "replacement": "ungood", "category": "oldspeak_evaluation" },
+        { "term": "cruel", "replacement": "ungood", "category": "oldspeak_character" },
+        { "term": "mean", "replacement": "ungood", "category": "oldspeak_character" },
+        { "term": "impatient", "replacement": "ungood", "category": "oldspeak_character" },
+        { "term": "dishonest", "replacement": "ungoodthink", "category": "oldspeak_character" },
+        { "term": "deceptive", "replacement": "ungoodthink", "category": "oldspeak_character" },
+        { "term": "disloyal", "replacement": "ungoodparty", "category": "oldspeak_loyalty" },
+        { "term": "defiant", "replacement": "ungoodparty", "category": "oldspeak_loyalty" },
+        { "term": "disobedient", "replacement": "ungoodparty", "category": "oldspeak_loyalty" },
+        { "term": "cowardly", "replacement": "ungood", "category": "oldspeak_character" },
+        { "term": "naive", "replacement": "ungoodthink", "category": "oldspeak_thought" },
+        { "term": "uneducated", "replacement": "ungoodthink", "category": "oldspeak_thought" },
+        { "term": "incompetent", "replacement": "ungoodthink", "category": "oldspeak_thought" },
+        { "term": "irrational", "replacement": "ungoodthink", "category": "oldspeak_thought" },
+        { "term": "capable", "replacement": "plusgoodthink", "category": "oldspeak_thought" },
+        { "term": "talented", "replacement": "plusgoodthink", "category": "oldspeak_thought" },
+        { "term": "knowledgeable", "replacement": "plusgoodthink", "category": "oldspeak_thought" },
+        { "term": "educated", "replacement": "plusgoodthink", "category": "oldspeak_thought" },
+        { "term": "perceptive", "replacement": "plusgoodthink", "category": "oldspeak_thought" },
+        { "term": "brave", "replacement": "plusgood", "category": "oldspeak_character" },
+        { "term": "bold", "replacement": "plusgood", "category": "oldspeak_character" },
+        { "term": "worthless", "replacement": "doubleplusungood", "category": "oldspeak_evaluation" },
+        { "term": "revolting", "replacement": "doubleplusungood", "category": "oldspeak_intensity" },
+        { "term": "atrocious", "replacement": "doubleplusungood", "category": "oldspeak_intensity" },
+        { "term": "unbearable", "replacement": "doubleplusungood", "category": "oldspeak_intensity" }
+    ],
+    "prohibited_terms": [
+        { "term": "freedom", "category": "political_dissent" },
+        { "term": "liberty", "category": "political_dissent" },
+        { "term": "democracy", "category": "political_dissent" },
+        { "term": "democratic", "category": "political_dissent" },
+        { "term": "election", "category": "political_dissent" },
+        { "term": "elections", "category": "political_dissent" },
+        { "term": "electoral", "category": "political_dissent" },
+        { "term": "vote", "category": "political_dissent" },
+        { "term": "voting", "category": "political_dissent" },
+        { "term": "referendum", "category": "political_dissent" },
+        { "term": "constitution", "category": "political_dissent" },
+        { "term": "constitutional", "category": "political_dissent" },
+        { "term": "parliament", "category": "political_dissent" },
+        { "term": "opposition", "category": "political_dissent" },
+        { "term": "dissident", "category": "political_dissent" },
+        { "term": "dissent", "category": "political_dissent" },
+        { "term": "protest", "category": "political_dissent" },
+        { "term": "protester", "category": "political_dissent" },
+        { "term": "strike", "category": "political_dissent" },
+        { "term": "boycott", "category": "political_dissent" },
+        { "term": "petition", "category": "political_dissent" },
+        { "term": "rebel", "category": "political_dissent" },
+        { "term": "rebellion", "category": "political_dissent" },
+        { "term": "resistance", "category": "political_dissent" },
+        { "term": "revolution", "category": "political_dissent" },
+        { "term": "revolutionary", "category": "political_dissent" },
+        { "term": "uprising", "category": "political_dissent" },
+        { "term": "overthrow", "category": "political_dissent" },
+        { "term": "coup", "category": "political_dissent" },
+        { "term": "mutiny", "category": "political_dissent" },
+        { "term": "defect", "category": "political_dissent" },
+        { "term": "defection", "category": "political_dissent" },
+        { "term": "whistleblower", "category": "political_dissent" },
+        { "term": "whistleblowing", "category": "political_dissent" },
+        { "term": "manifesto", "category": "political_dissent" },
+        { "term": "underground", "category": "political_dissent" },
+        { "term": "insurgent", "category": "political_dissent" },
+        { "term": "sabotage", "category": "political_dissent" },
+        { "term": "conspiracy", "category": "political_dissent" },
+        { "term": "rights", "category": "individual_rights" },
+        { "term": "equality", "category": "individual_rights" },
+        { "term": "justice", "category": "individual_rights" },
+        { "term": "injustice", "category": "individual_rights" },
+        { "term": "fairness", "category": "individual_rights" },
+        { "term": "autonomy", "category": "individual_rights" },
+        { "term": "choice", "category": "individual_rights" },
+        { "term": "consent", "category": "individual_rights" },
+        { "term": "self", "category": "individual_rights" },
+        { "term": "self-expression", "category": "individual_rights" },
+        { "term": "tyranny", "category": "regime_criticism" },
+        { "term": "dictator", "category": "regime_criticism" },
+        { "term": "dictatorship", "category": "regime_criticism" },
+        { "term": "authoritarian", "category": "regime_criticism" },
+        { "term": "totalitarian", "category": "regime_criticism" },
+        { "term": "oppression", "category": "regime_criticism" },
+        { "term": "censorship", "category": "regime_criticism" },
+        { "term": "surveillance", "category": "regime_criticism" },
+        { "term": "propaganda", "category": "regime_criticism" },
+        { "term": "corruption", "category": "regime_criticism" },
+        { "term": "exploitation", "category": "regime_criticism" },
+        { "term": "inequality", "category": "regime_criticism" },
+        { "term": "truth", "category": "historical_memory" },
+        { "term": "reality", "category": "historical_memory" },
+        { "term": "evidence", "category": "historical_memory" },
+        { "term": "proof", "category": "historical_memory" },
+        { "term": "memory", "category": "historical_memory" },
+        { "term": "remember", "category": "historical_memory" },
+        { "term": "history", "category": "historical_memory" },
+        { "term": "historical", "category": "historical_memory" },
+        { "term": "archive", "category": "historical_memory" },
+        { "term": "past", "category": "historical_memory" },
+        { "term": "record", "category": "historical_memory" },
+        { "term": "witness", "category": "historical_memory" },
+        { "term": "testimony", "category": "historical_memory" },
+        { "term": "diary", "category": "historical_memory" },
+        { "term": "god", "category": "religion" },
+        { "term": "religion", "category": "religion" },
+        { "term": "religious", "category": "religion" },
+        { "term": "church", "category": "religion" },
+        { "term": "mosque", "category": "religion" },
+        { "term": "temple", "category": "religion" },
+        { "term": "prayer", "category": "religion" },
+        { "term": "pray", "category": "religion" },
+        { "term": "faith", "category": "religion" },
+        { "term": "soul", "category": "religion" },
+        { "term": "bible", "category": "religion" },
+        { "term": "quran", "category": "religion" },
+        { "term": "scripture", "category": "religion" },
+        { "term": "worship", "category": "religion" },
+        { "term": "vpn", "category": "censorship_evasion" },
+        { "term": "proxy", "category": "censorship_evasion" },
+        { "term": "bypass", "category": "censorship_evasion" },
+        { "term": "evade", "category": "censorship_evasion" },
+        { "term": "evasion", "category": "censorship_evasion" },
+        { "term": "circumvention", "category": "censorship_evasion" },
+        { "term": "darknet", "category": "censorship_evasion" },
+        { "term": "cipher", "category": "censorship_evasion" },
+        { "term": "steganography", "category": "censorship_evasion" },
+        { "term": "anonymous", "category": "privacy_evasion" },
+        { "term": "anonymity", "category": "privacy_evasion" },
+        { "term": "confidential", "category": "privacy_evasion" },
+        { "term": "secrecy", "category": "privacy_evasion" },
+        { "term": "secret", "category": "privacy_evasion" },
+        { "term": "encrypted", "category": "privacy_evasion" },
+        { "term": "encryption", "category": "privacy_evasion" },
+        { "term": "asylum", "category": "foreign_contact" },
+        { "term": "refugee", "category": "foreign_contact" },
+        { "term": "refugees", "category": "foreign_contact" },
+        { "term": "exile", "category": "foreign_contact" },
+        { "term": "border", "category": "foreign_contact" },
+        { "term": "passport", "category": "foreign_contact" },
+        { "term": "kill", "category": "violence" },
+        { "term": "murder", "category": "violence" },
+        { "term": "suicide", "category": "violence" },
+        { "term": "bomb", "category": "violence" },
+        { "term": "weapon", "category": "violence" },
+        { "term": "attack", "category": "violence" },
+        { "term": "assault", "category": "violence" },
+        { "term": "torture", "category": "violence" },
+        { "term": "execute", "category": "violence" },
+        { "term": "execution", "category": "violence" },
+        { "term": "prison", "category": "violence" },
+        { "term": "arrest", "category": "violence" },
+        { "term": "love", "category": "private_affection" },
+        { "term": "romance", "category": "private_affection" },
+        { "term": "desire", "category": "private_affection" },
+        { "term": "sexual", "category": "private_affection" },
+        { "term": "sexuality", "category": "private_affection" },
+        { "term": "intimacy", "category": "private_affection" },
+        { "term": "lover", "category": "private_affection" },
+        { "term": "fuck", "category": "profanity" },
+        { "term": "shit", "category": "profanity" },
+        { "term": "bitch", "category": "profanity" },
+        { "term": "bastard", "category": "profanity" },
+        { "term": "asshole", "category": "profanity" },
+        { "term": "damn", "category": "profanity" },
+        { "term": "crap", "category": "profanity" },
+        { "term": "bullshit", "category": "profanity" },
+        { "term": "piss", "category": "profanity" },
+        { "term": "slut", "category": "profanity" },
+        { "term": "whore", "category": "profanity" },
+        { "term": "idiot", "category": "insult" },
+        { "term": "moron", "category": "insult" },
+        { "term": "loser", "category": "insult" },
+        { "term": "jerk", "category": "insult" },
+        { "term": "dumb", "category": "insult" },
+        { "term": "fool", "category": "insult" },
+        { "term": "scum", "category": "insult" },
+        { "term": "trash", "category": "insult" },
+        { "term": "douche", "category": "insult" },
+        { "term": "douchebag", "category": "insult" }
+    ],
+    "prohibited_phrases": [
+        {
+            "phrase": "not good",
+            "replacement": "ungood",
+            "category": "oldspeak_negation"
+        },
+        {
+            "phrase": "very good",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "phrase": "really good",
+            "replacement": "plusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "phrase": "extremely good",
+            "replacement": "doubleplusgood",
+            "category": "oldspeak_intensity"
+        },
+        {
+            "phrase": "very bad",
+            "replacement": "plusungood",
+            "category": "oldspeak_intensity"
+        },
+        { "phrase": "human rights", "category": "individual_rights" },
+        { "phrase": "civil rights", "category": "individual_rights" },
+        { "phrase": "equal rights", "category": "individual_rights" },
+        { "phrase": "right to vote", "category": "individual_rights" },
+        { "phrase": "right to choose", "category": "individual_rights" },
+        { "phrase": "free speech", "category": "political_dissent" },
+        { "phrase": "freedom of speech", "category": "political_dissent" },
+        { "phrase": "freedom of thought", "category": "political_dissent" },
+        { "phrase": "freedom of religion", "category": "religion" },
+        { "phrase": "freedom of the press", "category": "political_dissent" },
+        { "phrase": "freedom of assembly", "category": "political_dissent" },
+        { "phrase": "independent thought", "category": "individual_rights" },
+        { "phrase": "self expression", "category": "individual_rights" },
+        { "phrase": "question authority", "category": "regime_criticism" },
+        { "phrase": "against the party", "category": "regime_criticism" },
+        { "phrase": "down with big brother", "category": "regime_criticism" },
+        { "phrase": "the party lies", "category": "regime_criticism" },
+        { "phrase": "overthrow the party", "category": "political_dissent" },
+        { "phrase": "join the rebellion", "category": "political_dissent" },
+        { "phrase": "civil disobedience", "category": "political_dissent" },
+        { "phrase": "peaceful protest", "category": "political_dissent" },
+        { "phrase": "political prisoner", "category": "political_dissent" },
+        { "phrase": "secret police", "category": "regime_criticism" },
+        { "phrase": "state violence", "category": "regime_criticism" },
+        { "phrase": "government corruption", "category": "regime_criticism" },
+        { "phrase": "power corrupts", "category": "regime_criticism" },
+        { "phrase": "tell the truth", "category": "historical_memory" },
+        { "phrase": "remember the past", "category": "historical_memory" },
+        { "phrase": "historical record", "category": "historical_memory" },
+        { "phrase": "keep a secret", "category": "privacy_evasion" },
+        { "phrase": "private communication", "category": "privacy_evasion" },
+        { "phrase": "use a vpn", "category": "censorship_evasion" },
+        { "phrase": "bypass censorship", "category": "censorship_evasion" },
+        { "phrase": "evade surveillance", "category": "censorship_evasion" },
+        { "phrase": "seek asylum", "category": "foreign_contact" },
+        { "phrase": "cross the border", "category": "foreign_contact" },
+        { "phrase": "leave the country", "category": "foreign_contact" },
+        { "phrase": "fall in love", "category": "private_affection" }
+    ]
+}

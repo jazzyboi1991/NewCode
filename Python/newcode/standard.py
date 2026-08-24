@@ -1,4 +1,4 @@
-"""Reserved Newcode 0.4 standard modules for the Python reference runtime."""
+"""Reserved Newcode standard modules for the Python reference runtime."""
 
 from fractions import Fraction
 from math import floor
@@ -86,6 +86,21 @@ def _pathexists(runtime, values, span):
     return safe_file_path(runtime.cwd, values[0], span).is_file()
 
 
+def _arguments(runtime, values, span):
+    for value in runtime.command_args:
+        runtime.censor.check(value, False, span)
+    return list(runtime.command_args)
+
+
+def _argument(runtime, values, span):
+    index = _integer(values[0], "argument index", span)
+    if index < 0 or index >= len(runtime.command_args):
+        raise fail("INPUTCRIME", "command argument does not exist", span)
+    value = runtime.command_args[index]
+    runtime.censor.check(value, False, span)
+    return value
+
+
 def _module(routines):
     return {routine.name: routine for routine in routines}
 
@@ -106,6 +121,10 @@ STANDARD_MODULES = {
         NativeRoutine(Span(1, 1), "wordthink", "extension", _params(("wordthink", "path")), _extension),
         NativeRoutine(Span(1, 1), "wordthink", "parentpath", _params(("wordthink", "path")), _parentpath),
         NativeRoutine(Span(1, 1), "goodthink", "pathexists", _params(("wordthink", "path")), _pathexists),
+    ]),
+    "standard/commandthink.think": _module([
+        NativeRoutine(Span(1, 1), "listthink", "arguments", _params(), _arguments),
+        NativeRoutine(Span(1, 1), "wordthink", "argument", _params(("numberthink", "index")), _argument),
     ]),
 }
 

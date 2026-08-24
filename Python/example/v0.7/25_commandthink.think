@@ -1,0 +1,6 @@
+// Newcode 0.7 command-line arguments.
+// Run with: goodthink run 25_commandthink.think -- first second
+use commandthink from "standard/commandthink.think"
+
+speak "all: ", call commandthink arguments()
+speak "first: ", call commandthink argument(0)

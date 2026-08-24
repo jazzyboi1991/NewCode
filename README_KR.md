@@ -10,9 +10,9 @@ Newcode는 조지 오웰의 *1984*에 등장하는 신어(Newspeak)에서 영감
 
 ## 현재 상태
 
-언어 사양 버전은 **0.6**, Python 구현 버전은 **0.6.0**입니다. 실행 코드는 `Python/` 아래에 있으며, 문자열 처리·복합 자료형·파일·모듈·개발 도구·신뢰할 수 있는 오류 처리·사용자 정의 `recordthink`를 포함합니다.
+언어 사양 버전은 **0.7**, Python 구현 버전은 **0.7.0**입니다. 실행 코드는 `Python/` 아래에 있으며, 문자열 처리·복합 자료형·파일·모듈·개발 도구·신뢰할 수 있는 오류 처리·사용자 정의 `recordthink`·명령행 인자를 포함합니다.
 
-현재 구현은 Python 참조 구현 0.6.0입니다. 0.1~0.5 문법의 하위 호환성을 유지하면서 문자열 처리, 중첩 기록, 표준 모듈, 파일·모듈 진단, CLI 단축형, `trythink` 오류 handler, 사용자 정의 `recordthink`를 제공합니다.
+현재 구현은 Python 참조 구현 0.7.0입니다. 0.1~0.6 문법의 하위 호환성을 유지하면서 문자열 처리, 중첩 기록, 표준 모듈, 파일·모듈 진단, CLI 단축형, `trythink` 오류 handler, 사용자 정의 `recordthink`, `commandthink`를 제공합니다.
 
 버전별 변경 사항은 [`CHANGELOG.md`](CHANGELOG.md)에서 확인할 수 있습니다.
 
@@ -73,6 +73,13 @@ goodthink --ast program.think
 goodthink --policy "text"
 ```
 
+`--` 뒤에 프로그램 인자를 전달할 수 있습니다. 첫 번째 인자는 0번입니다.
+
+```text
+goodthink run program.think -- first second
+goodthink program.think -- first second
+```
+
 `check`는 프로그램을 실행하지 않고 lexing, parsing, 정적 검사를 수행합니다. `run`은 같은 검사를 수행한 다음 프로그램을 인터프리트합니다. 프로그램 파일의 확장자는 반드시 `.think`여야 합니다. 오류에는 진단 코드가 포함되며, 소스 위치를 확인할 수 있는 경우 해당 줄·열과 caret 표시도 함께 출력됩니다.
 
 ### CLI 명령 설명
@@ -88,7 +95,7 @@ goodthink --policy "text"
 
 ### 파일 헤더
 
-Newcode 0.6부터는 언어 헤더를 생략할 수 있습니다. 헤더가 없으면 기본적으로 0.6 문법으로 해석됩니다. 기존 프로그램은 `newcode 0.1`부터 `newcode 0.5`까지 명시해 계속 실행할 수 있습니다.
+Newcode 0.7부터는 언어 헤더를 생략할 수 있습니다. 헤더가 없으면 기본적으로 0.7 문법으로 해석됩니다. 기존 프로그램은 `newcode 0.1`부터 `newcode 0.6`까지 명시해 계속 실행할 수 있습니다.
 
 ```newcode
 thought numberthink count be 3
@@ -215,7 +222,8 @@ NewCode/
 │   │   ├── v0.3/                 # 0.3 문자열·중첩 기록 예제
 │   │   ├── v0.4/                 # 0.4 표준 라이브러리 예제
 │   │   ├── v0.5/                 # 0.5 오류 handler 예제
-│   │   └── v0.6/                 # 0.6 사용자 정의 recordthink 예제
+│   │   ├── v0.6/                 # 0.6 사용자 정의 recordthink 예제
+│   │   └── v0.7/                 # 0.7 commandthink 예제
 │   └── newcode/
 │       ├── cli.py                # 인자 처리와 명령 실행 조정
 │       ├── lexer.py              # 토큰, 리터럴, 주석, 어휘 검사
@@ -244,8 +252,8 @@ source.think
 
 ## 의도적인 제한
 
-0.6에서는 사용자 정의 `recordthink`를 지원하지만 명령행 인자·환경 설정·디버거,
-네트워크 접근, 복소수, 암시적 자료형 변환, 공식 lexicon 변경은 여전히 제공하지
+0.7에서는 `commandthink` 명령행 인자를 지원하지만 환경 설정·디버거, 네트워크
+접근, 복소수, 암시적 자료형 변환, 공식 lexicon 변경은 여전히 제공하지
 않습니다. 0.5에서는 `trythink`의 오류 handler를 안정화했습니다. 이 제한은
 실험의 일부입니다. 제한된 어휘가 프로그램의 형태를 어떻게 바꾸는지 관찰할 수
 있도록 언어의 표현 범위를 의도적으로 좁혔습니다.
@@ -256,6 +264,17 @@ source.think
 `WORDCRIME`, `TESTCRIME` 중 하나의 실행 오류를 처리합니다. 코드 없는
 `othercrime`는 catch-all이며 한 번만 마지막에 둘 수 있습니다. `WORKLIMIT`은
 항상 바깥으로 전파되어 잡을 수 없습니다.
+
+### 명령행 인자 (0.7)
+
+```newcode
+use commandthink from "standard/commandthink.think"
+speak call commandthink argument(0)
+```
+
+`arguments()`는 CLI의 `--` 뒤 값을 `listthink`로 반환하고,
+`argument(index)`는 0부터 세는 `wordthink` 값을 반환합니다. 없는 위치는
+`INPUTCRIME`이며 명령행 값에도 공식 검열 정책이 적용됩니다.
 
 ### 사용자 정의 `recordthink` 자료형 (0.6)
 

@@ -1,6 +1,7 @@
 import json
 import re
 from pathlib import Path
+from importlib import resources
 
 from newcode.errors import Span, fail
 
@@ -36,6 +37,11 @@ class Censor:
             [x for x in self.terms if x],
             [x for x in self.phrases if x],
         )
+
+    @classmethod
+    def official(cls):
+        """Load the bundled official lexicon from an installed package."""
+        return cls(resources.files("newcode").joinpath("prohibited_words.json"))
 
     @staticmethod
     def _entry(item, key):
