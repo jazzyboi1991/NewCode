@@ -4,6 +4,19 @@ Newcode와 Python 참조 구현의 주요 변경 사항을 기록합니다.
 
 ## [Unreleased]
 
+## [0.8.0] — 2026-08-28
+
+### Added
+
+- `goodthink policy show`의 사람용 정책 메타데이터 요약을 추가했습니다.
+- `goodthink policy show --json`의 안정된 JSON 출력 형식을 추가했습니다.
+- 공식 lexicon의 schema·항목 수·검사 시점·정규화 규칙을 확인할 수 있습니다.
+
+### Compatibility
+
+- 헤더 없는 프로그램은 Newcode 0.8로 해석하며 `newcode 0.1`~`newcode 0.7`을 계속 지원합니다.
+- 기존 `policy check`와 `--policy` 동작, 언어 명령어, 오류 코드는 변경하지 않았습니다.
+
 ## [0.7.0] — 2026-08-25
 
 ### Added

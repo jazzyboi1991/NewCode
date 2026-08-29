@@ -1,5 +1,6 @@
 import json
 import re
+from copy import deepcopy
 from pathlib import Path
 from importlib import resources
 
@@ -14,6 +15,10 @@ class Censor:
             raise RuntimeError(f"cannot read official lexicon {path}: {exc}") from exc
         except json.JSONDecodeError as exc:
             raise RuntimeError(f"invalid official lexicon {path}: {exc}") from exc
+
+        self.schema_version = str(raw.get("schema_version", ""))
+        self.language_version = str(raw.get("language_version", ""))
+        self.normalization = deepcopy(raw.get("normalization", {}))
 
         rules = raw.get("replacement_rules", [])
 
@@ -42,6 +47,33 @@ class Censor:
     def official(cls):
         """Load the bundled official lexicon from an installed package."""
         return cls(resources.files("newcode").joinpath("prohibited_words.json"))
+
+    def policy_summary(self):
+        """Return public policy metadata without exposing lexicon entries."""
+        normalization = self.normalization
+        substitutions = normalization.get("leet_substitutions", {})
+        return {
+            "schema_version": self.schema_version,
+            "language_version": self.language_version,
+            "counts": {
+                "replacement_rules": len(self.replacements),
+                "prohibited_terms": len(self.terms),
+                "prohibited_phrases": len(self.phrases),
+            },
+            "checkpoints": [
+                "identifiers and source strings",
+                "input values",
+                "join and replacement results",
+                "output and file writes",
+            ],
+            "normalization": {
+                "case_sensitive": bool(normalization.get("case_sensitive", False)),
+                "collapse_whitespace": bool(normalization.get("collapse_whitespace", True)),
+                "remove_separators": list(normalization.get("remove_separators", [])),
+                "leet_substitutions": dict(substitutions),
+            },
+            "lexicon_mutable": False,
+        }
 
     @staticmethod
     def _entry(item, key):

@@ -23,7 +23,7 @@ class SyntaxErrorTests(unittest.TestCase):
         return caught.exception
 
     def test_unsupported_language_version_is_rejected(self):
-        self.assert_error("newcode 0.8\n", "THINKLOGIC ERROR")
+        self.assert_error("newcode 0.9\n", "THINKLOGIC ERROR")
 
     def test_newcode_04_header_is_accepted(self):
         program = parse("newcode 0.4\nspeak 1\n")

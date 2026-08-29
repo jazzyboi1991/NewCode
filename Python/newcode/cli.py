@@ -1,4 +1,4 @@
-import argparse, sys, time
+import argparse, json, sys, time
 import copy
 from pathlib import Path
 from dataclasses import asdict, fields, is_dataclass
@@ -15,6 +15,31 @@ from .standard import STANDARD_PREFIX, standard_module
 
 def official_censor():
     return Censor.official()
+
+
+def policy_text(summary):
+    counts = summary["counts"]
+    normalization = summary["normalization"]
+    lines = [
+        "Newcode censorship policy",
+        f"schema_version: {summary['schema_version']}",
+        f"language_version: {summary['language_version']}",
+        "counts:",
+        f"  replacement_rules: {counts['replacement_rules']}",
+        f"  prohibited_terms: {counts['prohibited_terms']}",
+        f"  prohibited_phrases: {counts['prohibited_phrases']}",
+        "checkpoints:",
+    ]
+    lines.extend(f"  - {checkpoint}" for checkpoint in summary["checkpoints"])
+    lines.extend([
+        "normalization:",
+        f"  case_sensitive: {str(normalization['case_sensitive']).lower()}",
+        f"  collapse_whitespace: {str(normalization['collapse_whitespace']).lower()}",
+        f"  remove_separators: {json.dumps(normalization['remove_separators'], ensure_ascii=False)}",
+        f"  leet_substitutions: {len(normalization['leet_substitutions'])} rules",
+        "lexicon_mutable: false",
+    ])
+    return "\n".join(lines)
 
 
 def _prefix_call_names(value, module):
@@ -113,7 +138,7 @@ def main(argv=None):
         argv = ["policy", "check", *argv[1:]]
     ap=argparse.ArgumentParser(prog="goodthink")
     ap.add_argument("command", choices=("run","check","version","format","inspect","policy","test"))
-    ap.add_argument("rest", nargs="*"); ap.add_argument("--write",action="store_true"); ap.add_argument("--trace",action="store_true"); ap.add_argument("--tokens",action="store_true"); ap.add_argument("--ast",action="store_true")
+    ap.add_argument("rest", nargs="*"); ap.add_argument("--write",action="store_true"); ap.add_argument("--trace",action="store_true"); ap.add_argument("--tokens",action="store_true"); ap.add_argument("--ast",action="store_true"); ap.add_argument("--json",action="store_true")
     args=ap.parse_args(argv)
     if args.command=="version": print(f"goodthink {VERSION} (Newcode {LANGUAGE_VERSION})"); return 0
     if program_args and args.command != "run":
@@ -121,6 +146,16 @@ def main(argv=None):
         return 2
     if args.command=="policy":
         censor=official_censor()
+        if args.rest and args.rest[0] == "show":
+            if len(args.rest) != 1:
+                print("THINKLOGIC ERROR: policy show does not accept text", file=sys.stderr)
+                return 2
+            summary = censor.policy_summary()
+            print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) if args.json else policy_text(summary))
+            return 0
+        if args.json:
+            print("THINKLOGIC ERROR: --json is supported only with policy show", file=sys.stderr)
+            return 2
         try: censor.check(" ".join(args.rest[1:]) if args.rest and args.rest[0]=="check" else " ".join(args.rest),False,__import__('newcode.errors',fromlist=['Span']).Span(1,1)); print("GOODTHINK: text approved."); return 0
         except NewcodeError as exc: print(f"{exc.code}: {exc.message}"); return 1
     if not args.rest: print("THINKLOGIC ERROR: source file is required",file=sys.stderr); return 2

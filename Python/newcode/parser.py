@@ -30,13 +30,13 @@ class Parser:
         # 헤더는 생략할 수 있으며, 생략 시 현재 기본 언어 버전을 사용합니다.
         if self.word("newcode"):
             header = self.take(); version = self.current()
-            if version.kind != "number" or version.value not in ("0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7"):
+            if version.kind != "number" or version.value not in ("0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8"):
                 raise fail("THINKLOGIC ERROR", "unsupported language version", header.span)
             self.version = version.value
             self.take()
             self.end_line()
         else:
-            self.version = "0.7"
+            self.version = "0.8"
         statements = []
         while self.current().kind != "eof": statements.append(self.statement()); self.lines()
         return Program(statements)

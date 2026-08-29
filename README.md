@@ -17,14 +17,14 @@ extension.
 
 ## Current status
 
-The language specification is version **0.7** and the Python package reports
-implementation version **0.7.0**. Rust and browser ports remain future work;
+The language specification is version **0.8** and the Python package reports
+implementation version **0.8.0**. Rust and browser ports remain future work;
 the executable reference implementation is under `Python/`.
 
 `goodthink version`, `run`, `check`, `format`, `inspect`, `policy`, and `test`
 are available. 0.1 compatibility remains covered by the regression suite.
 
-Version 0.7 adds the `commandthink` standard module and installable package
+Version 0.8 adds public `policy show` metadata output. Version 0.7 adds the `commandthink` standard module and installable package
 resources. Version 0.6 adds named `recordthink` types with required named fields. Version
 0.4 adds reserved standard modules for deterministic random values,
 local time, and safe relative paths. See [`CHANGELOG.md`](CHANGELOG.md) for the
@@ -71,6 +71,8 @@ goodthink format [--write] <program.think>
 goodthink check [--trace] <program.think>
 goodthink inspect --tokens|--ast <program.think>
 goodthink policy check "text"
+goodthink policy show
+goodthink policy show --json
 goodthink test <program.think>
 ```
 
@@ -108,12 +110,14 @@ Command summary:
 - `inspect --tokens` prints lexer tokens and source positions.
 - `inspect --ast` prints the parsed AST.
 - `policy check "text"` checks text against the censorship policy.
+- `policy show` displays policy metadata without exposing prohibited entries.
+- `policy show --json` emits the same metadata as stable JSON.
 - `test` runs only `testthink` blocks in isolation.
 
 ### Optional header
 
-Newcode 0.7 files may omit the language header. A missing header defaults to
-Newcode 0.7. Explicit `newcode 0.1` through `newcode 0.6` headers
+Newcode 0.8 files may omit the language header. A missing header defaults to
+Newcode 0.8. Explicit `newcode 0.1` through `newcode 0.7` headers
 remain supported for legacy programs.
 
 ```newcode
@@ -294,6 +298,10 @@ case-insensitive and normalizes common separator and leetspeak variations.
 The interpreter also rechecks text created by `join`, so concatenation cannot
 be used to bypass the policy.
 
+Use `goodthink policy show` for a human-readable summary of the official
+schema, entry counts, checkpoints, and normalization rules. Add `--json` for
+automation. The output never includes the complete prohibited-word lists.
+
 Typical diagnostics include `WORDCRIME`, `CRIMESTOP`, `THINKTYPE ERROR`,
 `THINKLOGIC ERROR`, `MATHCRIME`, `INPUTCRIME`, `LOOPTHINK`, `WORKLIMIT`,
 `INDEXCRIME`, `FILECRIME`, `MODULECRIME`, and `TESTCRIME`.
@@ -343,7 +351,7 @@ source.think
 
 ## Deliberate limitations
 
-Newcode 0.7 still excludes network access, environment settings, complex
+Newcode 0.8 still excludes network access, environment settings, complex
 numbers, implicit type conversion, and
 user-controlled changes to the official lexicon. These
 limitations are part of the experiment:

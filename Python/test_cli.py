@@ -1,4 +1,5 @@
 import io
+import json
 import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
@@ -79,12 +80,43 @@ class CliTests(unittest.TestCase):
         self.assertEqual(errors, "")
         self.assertIn("WORDCRIME:", output)
 
+    def test_policy_show_prints_human_summary_without_terms(self):
+        code, output, errors = self.run_cli("policy", "show")
+
+        self.assertEqual(code, 0)
+        self.assertEqual(errors, "")
+        self.assertIn("schema_version", output)
+        self.assertIn("replacement_rules", output)
+        self.assertIn("normalization", output)
+        self.assertNotIn("freedom", output)
+
+    def test_policy_show_json_has_stable_metadata(self):
+        code, output, errors = self.run_cli("policy", "show", "--json")
+
+        self.assertEqual(code, 0)
+        self.assertEqual(errors, "")
+        result = json.loads(output)
+        self.assertIn("schema_version", result)
+        self.assertIn("language_version", result)
+        self.assertEqual(set(result["counts"]), {"replacement_rules", "prohibited_terms", "prohibited_phrases"})
+        self.assertIn("checkpoints", result)
+        self.assertIn("normalization", result)
+        self.assertFalse(result["lexicon_mutable"])
+        self.assertNotIn("freedom", output)
+
+    def test_policy_show_rejects_text_and_json_on_check(self):
+        code, output, errors = self.run_cli("policy", "check", "hello", "--json")
+
+        self.assertEqual(code, 2)
+        self.assertEqual(output, "")
+        self.assertIn("THINKLOGIC ERROR", errors)
+
     def test_version_reports_language_and_runner_versions(self):
         code, output, errors = self.run_cli("version")
 
         self.assertEqual(code, 0)
         self.assertEqual(errors, "")
-        self.assertEqual(output, "goodthink 0.7.0 (Newcode 0.7)\n")
+        self.assertEqual(output, "goodthink 0.8.0 (Newcode 0.8)\n")
 
     def test_formatter_write_updates_file(self):
         source = "newcode 0.2\nverify 1 same 1\n    speak 1\nendverify\n"

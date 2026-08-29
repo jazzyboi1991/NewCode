@@ -10,9 +10,9 @@ Newcode는 조지 오웰의 *1984*에 등장하는 신어(Newspeak)에서 영감
 
 ## 현재 상태
 
-언어 사양 버전은 **0.7**, Python 구현 버전은 **0.7.0**입니다. 실행 코드는 `Python/` 아래에 있으며, 문자열 처리·복합 자료형·파일·모듈·개발 도구·신뢰할 수 있는 오류 처리·사용자 정의 `recordthink`·명령행 인자를 포함합니다.
+언어 사양 버전은 **0.8**, Python 구현 버전은 **0.8.0**입니다. 실행 코드는 `Python/` 아래에 있으며, 문자열 처리·복합 자료형·파일·모듈·개발 도구·신뢰할 수 있는 오류 처리·사용자 정의 `recordthink`·명령행 인자·정책 요약 출력을 포함합니다.
 
-현재 구현은 Python 참조 구현 0.7.0입니다. 0.1~0.6 문법의 하위 호환성을 유지하면서 문자열 처리, 중첩 기록, 표준 모듈, 파일·모듈 진단, CLI 단축형, `trythink` 오류 handler, 사용자 정의 `recordthink`, `commandthink`를 제공합니다.
+현재 구현은 Python 참조 구현 0.8.0입니다. 0.1~0.7 문법의 하위 호환성을 유지하면서 문자열 처리, 중첩 기록, 표준 모듈, 파일·모듈 진단, CLI 단축형, `trythink` 오류 handler, 사용자 정의 `recordthink`, `commandthink`, `policy show`를 제공합니다.
 
 버전별 변경 사항은 [`CHANGELOG.md`](CHANGELOG.md)에서 확인할 수 있습니다.
 
@@ -57,6 +57,8 @@ goodthink format [--write] <program.think>
 goodthink inspect --tokens <program.think>
 goodthink inspect --ast <program.think>
 goodthink policy check "text"
+goodthink policy show
+goodthink policy show --json
 goodthink test <program.think>
 ```
 
@@ -91,11 +93,13 @@ goodthink program.think -- first second
 - `inspect --tokens`: lexer가 만든 토큰과 위치를 출력합니다.
 - `inspect --ast`: parser가 만든 AST를 출력합니다.
 - `policy check "text"`: 문자열이 검열 정책을 통과하는지 검사합니다.
+- `policy show`: 금지어를 노출하지 않고 정책 메타데이터를 보여 줍니다.
+- `policy show --json`: 같은 메타데이터를 안정된 JSON으로 출력합니다.
 - `test`: `testthink` 블록만 격리된 환경에서 실행합니다.
 
 ### 파일 헤더
 
-Newcode 0.7부터는 언어 헤더를 생략할 수 있습니다. 헤더가 없으면 기본적으로 0.7 문법으로 해석됩니다. 기존 프로그램은 `newcode 0.1`부터 `newcode 0.6`까지 명시해 계속 실행할 수 있습니다.
+Newcode 0.8부터는 언어 헤더를 생략할 수 있습니다. 헤더가 없으면 기본적으로 0.8 문법으로 해석됩니다. 기존 프로그램은 `newcode 0.1`부터 `newcode 0.7`까지 명시해 계속 실행할 수 있습니다.
 
 ```newcode
 thought numberthink count be 3
@@ -204,6 +208,8 @@ validator는 자료형 검사, 이름·스코프 검사, 중복 선언 검사, �
 - `prohibited_phrases` — 전체 표현 단위로 거부되는 금지 구문
 
 식별자, 문자열 리터럴, `listenwords` 입력이 검사 대상입니다. 매칭은 대소문자를 구분하지 않으며 일반적인 구분 문자와 leetspeak 변형을 정규화합니다. 또한 `join`으로 만들어진 문자열도 다시 검사하므로 문자열 연결로 정책을 우회할 수 없습니다.
+
+`goodthink policy show`는 공식 schema, 항목 수, 검사 시점, 정규화 규칙을 보여 줍니다. `--json`을 붙이면 자동화용 JSON으로 출력하며 전체 금지어 목록은 포함하지 않습니다.
 
 대표적인 진단 코드는 `WORDCRIME`, `CRIMESTOP`, `THINKTYPE ERROR`, `THINKLOGIC ERROR`, `MATHCRIME`, `INPUTCRIME`, `LOOPTHINK`, `WORKLIMIT`입니다.
 
